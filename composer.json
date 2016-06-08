@@ -1,5 +1,5 @@
 {
-    "name": "Acciona/Users",
+    "name": "accionadev/users",
     "description": "Acciona Solutions Plugin - Provides user administration and access list control",
     "type": "cakephp-plugin",
     "require": {

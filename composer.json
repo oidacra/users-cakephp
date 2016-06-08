@@ -13,12 +13,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Acciona\\Users\\": "src"
+            "AccionaDev\\Users\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Accion\\Users\\Test\\": "tests",
+            "AccionaDev\\Users\\Test\\": "tests",
             "Cake\\Test\\": "./vendor/cakephp/cakephp/tests"
         }
     }

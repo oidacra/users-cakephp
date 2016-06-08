@@ -1,0 +1,124 @@
+<?php
+namespace Acciona\Users\Model\Table;
+
+use Cake\ORM\RulesChecker;
+use Cake\ORM\Table;
+use Cake\Validation\Validator;
+use Acciona\Users\Utils\CollectionsUtils;
+
+/**
+ * Permissions Model
+ *
+ * @property \Cake\ORM\Association\HasMany $PermissionsActions
+ * @property \Cake\ORM\Association\BelongsToMany $Roles
+ */
+class PermissionsTable extends Table
+{
+    /**
+     * Initialize method
+     *
+     * @param array $config The configuration for the Table.
+     * @return void
+     */
+    public function initialize(array $config)
+    {
+        parent::initialize($config);
+
+        $this->table('permissions');
+        $this->displayField('id');
+        $this->primaryKey('id');
+
+        $this->hasMany('PermissionsActions', [
+            'foreignKey' => 'permission_id',
+            'className' => 'Acciona/Users.PermissionsActions'
+        ]);
+        $this->belongsToMany('Roles', [
+            'foreignKey' => 'permission_id',
+            'targetForeignKey' => 'rol_id',
+            'joinTable' => 'roles_permissions',
+            'className' => 'Acciona/Users.Roles',
+            'through' => 'Acciona/Users.RolesPermissions'
+        ]);
+    }
+
+    /**
+     * Default validation rules.
+     *
+     * @param \Cake\Validation\Validator $validator Validator instance.
+     * @return \Cake\Validation\Validator
+     */
+    public function validationDefault(Validator $validator)
+    {
+        $validator
+            ->integer('id')
+            ->allowEmpty('id', 'create');
+
+        $validator
+            ->requirePresence('entity', 'create')
+            ->notEmpty('entity');
+
+        return $validator;
+    }
+
+    /**
+     * Returns a rules checker object that will be used for validating
+     * application integrity.
+     *
+     * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
+     * @return \Cake\ORM\RulesChecker
+     */
+    public function buildRules(RulesChecker $rules)
+    {
+        $rules->add($rules->isUnique(['entity']));
+        return $rules;
+    }
+
+    /**
+     * Returns the actions from database given
+     *
+     * @param int $userId
+     * @param String $domain
+     * @param String $entity
+     * @param String $action
+     * @return array[int]
+     */
+    public function getUserActions($userId, $domain, $entity, $action)
+    {
+      $permissions = $this
+                        ->findUserPermissions(
+                          $userId,
+                          $domain,
+                          $entity,
+                          $action)->first();
+      if ($permissions) {
+        return CollectionsUtils::flatMap($permissions->roles, function ($rol) {
+          return $this->splitActions($rol->_joinData['actions']);
+        });
+      }
+
+      return [];
+    }
+
+    private function splitActions($actions)
+    {
+      if ($actions == '*') {
+        return ['*'];
+      }
+
+      return explode(',', $actions);
+    }
+
+    public function findUserPermissions($userId, $domain, $entity, $action)
+    {
+        $queryRoles = $this->Roles->getRolesByUserId($userId);
+        $query = $this
+          ->find()
+          ->contain(['Roles' => function ($q) use($queryRoles) {
+            return $q->where(['Roles.id IN' => $queryRoles]);
+          }])
+          ->where(['Permissions.domain' => $domain,
+                   'Permissions.entity' => $entity]);
+
+        return $query;
+    }
+}

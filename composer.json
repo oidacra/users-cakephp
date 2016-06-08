@@ -1,0 +1,25 @@
+{
+    "name": "Acciona/Users",
+    "description": "Acciona Solutions Plugin - Provides user administration and access list control",
+    "type": "cakephp-plugin",
+    "require": {
+        "php": ">=5.4.16",
+        "cakephp/cakephp": "~3.0",
+        "admad/cakephp-jwt-auth": "^2.0"
+
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Acciona\\Users\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Accion\\Users\\Test\\": "tests",
+            "Cake\\Test\\": "./vendor/cakephp/cakephp/tests"
+        }
+    }
+}

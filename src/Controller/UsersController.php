@@ -82,6 +82,7 @@ class UsersController extends AppController
 
     public function user()
     {
+        $this->request->allowMethod(['get']);
         $user = $this->Auth->identify();
         if ($user) {
             $this->setData($user);

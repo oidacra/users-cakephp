@@ -22,6 +22,10 @@ Router::plugin(
                   'action' => 'register',
                   'method' => 'POST'
                 ],
+                'user' => [
+                  'action' => 'user',
+                  'method' => 'GET'
+                ],
               ]
             ]);
             $routes->resources('Roles');

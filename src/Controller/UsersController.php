@@ -80,6 +80,16 @@ class UsersController extends AppController
         $this->setData($user);
     }
 
+    public function user()
+    {
+        $user = $this->Auth->identify();
+        if ($user) {
+            $this->setData($user);
+        } else {
+            throw new UnauthorizedException(__('User not authenticated'));
+        }
+    }
+
     public function checkCaptcha()
     {
         // TODO: implement this

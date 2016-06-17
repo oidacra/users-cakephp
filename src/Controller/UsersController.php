@@ -95,7 +95,7 @@ class UsersController extends AppController
         }
     }
 
-    public funciton passwordRecovery()
+    public function passwordRecovery()
     {
         // TODO: should validate token received and password
         // use token to get id of user

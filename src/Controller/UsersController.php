@@ -3,9 +3,12 @@ namespace Acciona\Users\Controller;
 
 use Acciona\Users\Controller\AppController;
 use Cake\Core\Plugin;
-use Cake\Error\Debugger;
+use Cake\Core\Configure;
 use Cake\Network\Exception\UnauthorizedException;
+use Cake\Network\Exception\BadRequestException;
 use Cake\Utility\Security;
+use Cake\Mailer\Email;
+use Cake\Log\Log;
 use Firebase\JWT\JWT;
 /**
  * Users Controller
@@ -22,7 +25,7 @@ class UsersController extends AppController
     {
         parent::initialize();
         if ($this->Auth) {
-            $this->Auth->allow(['login', 'logout']);
+            $this->Auth->allow(['login', 'logout', 'passwordRecovery', 'reset']);
         }
     }
 
@@ -33,7 +36,8 @@ class UsersController extends AppController
             'data' => [
                 'token' => JWT::encode([
                     'sub' => $user['email'],
-                    'exp' =>  time() + 604800 // sets token life to one week
+                    'exp' =>  time() +
+                              Configure::read('Users.Token.expiration', 604800)
                 ], Security::salt())
             ],
             '_serialize' => ['success', 'data']
@@ -87,8 +91,93 @@ class UsersController extends AppController
         if ($user) {
             $this->setData($user);
         } else {
-            throw new UnauthorizedException(__('User not authenticated'));
+            throw new UnauthorizedException(__('User not authenticated.'));
         }
+    }
+
+    public funciton passwordRecovery()
+    {
+        // TODO: should validate token received and password
+        // use token to get id of user
+    }
+
+    public function reset($email = null)
+    {
+        $this->request->allowMethod(['post', 'put']);
+        if ($email) {
+            $user = $this->Users->findByEmail($email);
+            if ($user) {
+                $token = $this->generateToken($user['email']);
+                if ($token && $this->sendRecoveryEmail($token, $user['email'])) {
+                    $message = __('Message has been sent to your email with
+                                    steps to recover your password');
+                    $this->Flash->success($message);
+                    $data = [
+                        'success' => true,
+                        'message' => $message
+                    ];
+
+                } else {
+                    $message = __('There was an error while sending the
+                                    email. Please try again or contact an
+                                    administrator.');
+                    $this->Flash->error($message);
+                    $data = [
+                        'success' => false,
+                        'message' => $message
+                    ];
+                }
+                $this->setData($data);
+            } else {
+                $message = __('Incorrect email.');
+                $this->Flash->error($message);
+                $data = [
+                    'success' => false,
+                    'message' => $message
+                ];
+                $this->setData($data);
+            }
+        } else {
+            throw new BadRequestException(__('An email should be sent.'));
+        }
+    }
+
+    /**
+     * Generate and save token for the email
+     * @return number | null
+     */
+    protected function generateAndSaveToken($email)
+    {
+        // TODO: generate token and save it in a database
+        $expiration = Configure::read('Users.PasswordRecovery.expiration');
+        $token = '';
+
+        return $token;
+    }
+
+    protected function sendRecoveryEmail($email, $token)
+    {
+        try {
+            $template = Configure::read('Users.PasswordRecovery.template');
+            $layout = Configure::read('Users.PasswordRecovery.layout');
+            $sender = Configure::read('Users.PasswordRecovery.sender');
+            $link = Configure::read('Users.PasswordRecovery.link') .
+                    '?token=' . $token;
+
+            $emailer = new Email();
+            $email->template($template, $layout)
+                ->to($email)
+                ->from($sender)
+                ->viewVars(['link' => $link])
+                ->send();
+        } catch (BadMethodCallException $b) {
+            Log::write('error',
+                __('An email could not be sent to the address {0}. Error: {1}',
+                [$email, $b->getMessage()]));
+            return false;
+        }
+
+        return true;
     }
 
     public function checkCaptcha()
@@ -287,7 +376,7 @@ class UsersController extends AppController
      * @param int $active
      * @return \Cake\Network\Response|null
      */
-    public function activeUser($id = null, $active = 0) {
+    public function activateUser($id = null, $active = 0) {
         $user = $this->Users->get($id);
         if ($this->request->is(['patch', 'post', 'put']) && $user) {
             $user['User']['active'] = intval($active);

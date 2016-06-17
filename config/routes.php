@@ -26,6 +26,14 @@ Router::plugin(
                   'action' => 'user',
                   'method' => 'GET'
                 ],
+                'password_recovery' => [
+                  'action' => 'passwordRecovery',
+                  'method' => 'POST'
+                ],
+                'reset' => [
+                  'action' => 'reset',
+                  'method' => 'POST'
+                ],
               ]
             ]);
             $routes->resources('Roles');

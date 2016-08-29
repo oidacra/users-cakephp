@@ -4,6 +4,8 @@ namespace Acciona\Users\Controller;
 use Acciona\Users\Controller\AppController;
 use Cake\Core\Plugin;
 use Cake\Core\Configure;
+use Cake\Core\App;
+use Cake\ORM\TableRegistry;
 use Cake\Network\Exception\UnauthorizedException;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Utility\Security;
@@ -14,6 +16,7 @@ use Firebase\JWT\JWT;
  * Users Controller
  *
  * @property \Users\Model\Table\UsersTable $Users
+ * @property \Users\Model\Table\PasswordTokens $PasswordTokens
  * @author Danilo Dominguez Perez
  */
 class UsersController extends AppController
@@ -27,6 +30,9 @@ class UsersController extends AppController
         if ($this->Auth) {
             $this->Auth->allow(['login', 'logout', 'passwordRecovery', 'reset']);
         }
+
+        $config = ['className' => App::className('Acciona/Users.PasswordTokens', 'Model/Table')];
+        $this->PasswordTokens = TableRegistry::get('PasswordTokens', $config);
     }
 
     protected function getToken($user)
@@ -95,20 +101,57 @@ class UsersController extends AppController
         }
     }
 
-    public function passwordRecovery()
+    public function passwordRecovery($id, $token)
     {
-        // TODO: should validate token received and password
-        // use token to get id of user
+        if ($id == null || $token == null) {
+            throw new BadRequestException(__('Wrong user id or token.'));
+        }
+
+        // validate user
+        $user = $this->Users->get($id, [
+            'fields' => ['id']
+        ]);
+        if (!$user) {
+            throw new BadRequestException(__('Wrong user id.'));
+        }
+
+        // validate token
+        $tokenRecord = $this->Users->PasswordTokens->find()
+            ->where(['user_id' => $user->id, 'token' => $token])
+            ->first();
+        if (!$tokenRecord || $tokenRecord->expiration > time()) {
+            throw new BadRequestException(__('Wrong token or it has already expired.'));
+        }
+
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            $user = $this->Users->patchEntity($user, $this->request->data);
+            if ($this->Users->save($user)) {
+                $this->Flash->success(__('The password has been updated.'));
+                $user = ['success' => true];
+                if (!$this->isRestCall()) {
+                    return $this->redirect(['action' => 'index']);
+                }
+            } else {
+                $this->Flash->error(__('The password could not be updated. Please, try again.'));
+                $user = [
+                  'success' => false,
+                  'errors' => $user->errors(),
+                ];
+            }
+        }
+
+        $this->setData($user);
     }
 
-    public function reset($email = null)
+    public function reset()
     {
         $this->request->allowMethod(['post', 'put']);
-        if ($email) {
-            $user = $this->Users->findByEmail($email);
+        if (isset($this->request->data['email'])) {
+            $email = $this->request->data['email'];
+            $user = $this->Users->findByEmail($email)->first();
             if ($user) {
-                $token = $this->generateToken($user['email']);
-                if ($token && $this->sendRecoveryEmail($token, $user['email'])) {
+                $token = $this->generateAndSaveToken($user->id);
+                if ($token && $this->sendRecoveryEmail($token, $user->email)) {
                     $message = __('Message has been sent to your email with
                                     steps to recover your password');
                     $this->Flash->success($message);
@@ -138,21 +181,19 @@ class UsersController extends AppController
                 $this->setData($data);
             }
         } else {
-            throw new BadRequestException(__('An email should be sent.'));
+            throw new BadRequestException(__('Please provide an email.'));
         }
     }
 
     /**
      * Generate and save token for the email
-     * @return number | null
+     * @return number | boolean
      */
-    protected function generateAndSaveToken($email)
+    protected function generateAndSaveToken($userId)
     {
-        // TODO: generate token and save it in a database
         $expiration = Configure::read('Users.PasswordRecovery.expiration');
-        $token = '';
 
-        return $token;
+        return $this->PasswordTokens->createToken($userId, $expiration);
     }
 
     protected function sendRecoveryEmail($email, $token)

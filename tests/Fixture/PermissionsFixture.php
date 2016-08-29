@@ -19,6 +19,7 @@ class PermissionsFixture extends TestFixture
     public $fields = [
         'id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => '', 'autoIncrement' => true, 'precision' => null],
         'entity' => ['type' => 'string', 'length' => 200, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'fixed' => null],
+        'domain' => ['type' => 'string', 'length' => 200, 'null' => false, 'default' => '', 'comment' => '', 'precision' => null, 'fixed' => null],
         '_constraints' => [
             'primary' => ['type' => 'primary', 'columns' => ['id'], 'length' => []],
         ],
@@ -37,7 +38,23 @@ class PermissionsFixture extends TestFixture
     public $records = [
         [
             'id' => 1,
-            'entity' => 'Lorem ipsum dolor sit amet'
+            'entity' => 'Users',
+            'domain' => 'Acciona/Users',
+        ],
+        [
+            'id' => 2,
+            'entity' => 'Controllers1',
+            'domain' => '',
+        ],
+        [
+            'id' => 3,
+            'entity' => 'Controllers2',
+            'domain' => '',
+        ],
+        [
+            'id' => 4,
+            'entity' => 'Controllers3',
+            'domain' => '',
         ],
     ];
 }

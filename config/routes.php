@@ -37,7 +37,16 @@ Router::plugin(
               ]
             ]);
             $routes->resources('Roles');
-            $routes->resources('Permissions');
+            $routes->resources('Permissions',
+                [
+                  'map' => [
+                    'permissions' => [
+                      'action' => 'permissions',
+                      'method' => 'GET'
+                    ],
+                  ]
+                ]
+            );
         });
     }
 );

@@ -45,9 +45,21 @@ class RolesPermissionsFixture extends TestFixture
     public $records = [
         [
             'id' => 1,
-            'actions' => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
-            'rol_id' => 1,
+            'actions' => '1,2', // Users, index,add
+            'rol_id' => 2,
             'permission_id' => 1
+        ],
+        [
+            'id' => 2,
+            'actions' => '*', // Controllers2, all actions
+            'rol_id' => 3,
+            'permission_id' => 2
+        ],
+        [
+            'id' => 3,
+            'actions' => '9,10', // Controllers3, action2,action3
+            'rol_id' => 2,
+            'permission_id' => 3
         ],
     ];
 }

@@ -17,7 +17,9 @@ $config = [
             'layout' => 'default',
             'link' => '',
             'expiration' => 300 // 5 minutes
-        ]
+        ],
+        //Minimum Password length
+        'minPasswordLen' => 6,
     ]
 ];
 

@@ -60,13 +60,13 @@ class RolesTable extends Table
         return $validator;
     }
 
-    public function getRolesByUserId($userId)
+    public function findRolesByUserId($userId)
     {
         return $this
                   ->find()
                   ->select(['id'])
-                  ->contain(['Users' => function ($q) use($userId) {
+                  ->innerJoinWith('Users', function ($q) use($userId) {
                     return $q->where(['Users.id' => $userId]);
-                  }]);
+                  });
     }
 }

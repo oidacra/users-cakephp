@@ -6,6 +6,7 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Cake\Core\Configure;
 use Cake\Error\Debugger;
 use Cake\Utility\Hash;
 /**
@@ -14,7 +15,7 @@ use Cake\Utility\Hash;
  */
 class UsersTable extends Table
 {
-
+    protected $minPasswordLen;
     /**
      * Initialize method
      *
@@ -31,14 +32,21 @@ class UsersTable extends Table
 
         $this->addBehavior('Timestamp');
 
+        $this->hasMany('PasswordTokens', [
+            'foreignKey' => 'user_id',
+            'className' => 'Acciona/Users.PasswordTokens'
+        ]);
+
         $this->belongsToMany('Roles', [
             'foreignKey' => 'user_id',
             'targetForeignKey' => 'role_id',
             'joinTable' => 'users_roles',
             'className' => 'Acciona/Users.Roles'
         ]);
+
+        $this->minPasswordLen = Configure::read('Users.minPasswordLen', 6);
     }
-    
+
     /**
      * Default validation rules.
      *
@@ -69,7 +77,7 @@ class UsersTable extends Table
             ->add('password',
                 'strong', [
                     'rule' => [$this, 'isStrongPassword'],
-                    'message' => __d('Users', 'Password should have at least an upper case letter, 
+                    'message' => __d('Users', 'Password should have at least an upper case letter,
                                      lower case letter, a number and a symbol.')
                 ]
             )
@@ -95,7 +103,7 @@ class UsersTable extends Table
 
     /**
      * Verifies if a password has at least one upper case letter, one lower case letter,
-     * a number and a symbol.
+     * a number and a symbol and at least 6 characters.
      *
      * @param $password
      * @param $context
@@ -109,7 +117,7 @@ class UsersTable extends Table
         $hasUpperCaseLetter = preg_match("/[a-z]+.*[A-Z]+|[A-Z]+.*[a-z]/", $password);
         $r = ($hasLetters && $hasNumbers && $hasPunctuation && $hasUpperCaseLetter);
 
-        return $r;
+        return strlen($password) >= $this->minPasswordLen && $r;
     }
 
     public function register(User $user)

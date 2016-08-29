@@ -56,22 +56,38 @@ class RolesTableTest extends TestCase
     }
 
     /**
-     * Test initialize method
+     * Test find roles by user
      *
      * @return void
      */
-    public function testInitialize()
+    public function testFindRolesByUser()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $result = $this->Roles->findRolesByUserId(1);
+        $this->assertTrue($result->isEmpty());
+
+        $result = $this->Roles->findRolesByUserId(2);
+        $expected = array(2);
+        $this->assertFalse($result->isEmpty());
+        $ids = $this->getRolesFromResultSet($result);
+        $this->assertEquals($ids, $expected);
+
+        $result = $this->Roles->findRolesByUserId(3);
+        $expected = array(2,3);
+        $this->assertFalse($result->isEmpty());
+        $ids = $this->getRolesFromResultSet($result);
+        $this->assertEquals($ids, $expected);
+
+        $result = $this->Roles->findRolesByUserId(4);
+        $expected = array(1);
+        $this->assertFalse($result->isEmpty());
+        $ids = $this->getRolesFromResultSet($result);
+        $this->assertEquals($ids, $expected);
     }
 
-    /**
-     * Test validationDefault method
-     *
-     * @return void
-     */
-    public function testValidationDefault()
+    private function getRolesFromResultSet($result)
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        return array_map(function ($e) {
+            return $e->id;
+        }, $result->toArray());
     }
 }

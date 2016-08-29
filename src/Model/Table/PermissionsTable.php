@@ -82,14 +82,13 @@ class PermissionsTable extends Table
      * @param String $action
      * @return array[int]
      */
-    public function getUserActions($userId, $domain, $entity, $action)
+    public function getUserActionsByEntity($userId, $domain, $entity)
     {
       $permissions = $this
-                        ->findUserPermissions(
+                        ->findUserPermissionsByEntity(
                           $userId,
                           $domain,
-                          $entity,
-                          $action)->first();
+                          $entity)->first();
       if ($permissions) {
         return CollectionsUtils::flatMap($permissions->roles, function ($rol) {
           return $this->splitActions($rol->_joinData['actions']);
@@ -108,14 +107,30 @@ class PermissionsTable extends Table
       return explode(',', $actions);
     }
 
-    public function findUserPermissions($userId, $domain, $entity, $action)
+    public function getUserActions($userId)
     {
-        $queryRoles = $this->Roles->getRolesByUserId($userId);
+        $permissionsQuery = $this->findUserPermissions($userId);
+        // TODO(Danilo): obtain all actions and ids to create a map and then update data
+        // TODO(Danilo): return format should be plugin, controller, action
+
+    }
+
+    public function findUserPermissions($userId)
+    {
+        $queryRoles = $this->Roles->findRolesByUserId($userId);
         $query = $this
           ->find()
           ->contain(['Roles' => function ($q) use($queryRoles) {
             return $q->where(['Roles.id IN' => $queryRoles]);
-          }])
+        }]);
+
+        return $query;
+    }
+
+    public function findUserPermissionsByEntity($userId, $domain, $entity)
+    {
+        $query = $this
+          ->findUserPermissions($userId)
           ->where(['Permissions.domain' => $domain,
                    'Permissions.entity' => $entity]);
 

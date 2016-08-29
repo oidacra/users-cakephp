@@ -14,12 +14,11 @@ class AppController extends BaseController
         // load core components
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
+        $this->loadComponent('Acciona/Users.AccionaAuth', [
+            'authenticate' => 'Jwt'
+        ]);
         //$this->loadComponent('Security');
         //$this->loadComponent('Csrf');
-        /*$this->loadComponent('Acciona/Users.AccionaAuth', [
-            'authenticate' => 'Jwt'
-            // 'authenticate' => 'Acciona'
-        ]);*/
     }
 
     public function isRestCall() {

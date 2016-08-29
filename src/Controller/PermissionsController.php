@@ -5,7 +5,6 @@ use Acciona\Users\Controller\AppController;
 
 /**
  * Permissions Controller
- *
  * @property \Acciona\Users\Model\Table\PermissionsTable $Permissions
  */
 class PermissionsController extends AppController
@@ -22,6 +21,22 @@ class PermissionsController extends AppController
 
         $this->set(compact('permissions'));
         $this->set('_serialize', ['permissions']);
+    }
+
+    /**
+     * Return the permissions of the logged user
+     *
+     * @return \Cake\Network\Response|null
+     */
+    public function permissions()
+    {
+        $this->request->allowMethod(['get']);
+        $user = $this->Auth->identify();
+        if ($user) {
+
+        } else {
+            throw new UnauthorizedException(__('User not authenticated.'));
+        }
     }
 
     /**

@@ -42,8 +42,53 @@ class PermissionsActionsFixture extends TestFixture
     public $records = [
         [
             'id' => 1,
-            'action' => 'Lorem ipsum dolor sit amet',
+            'action' => 'index',
             'permission_id' => 1
+        ],
+        [
+            'id' => 2,
+            'action' => 'add',
+            'permission_id' => 1
+        ],
+        [
+            'id' => 3,
+            'action' => 'edit',
+            'permission_id' => 1
+        ],
+        [
+            'id' => 4,
+            'action' => 'delete',
+            'permission_id' => 1
+        ],
+        [
+            'id' => 5,
+            'action' => 'action1',
+            'permission_id' => 2
+        ],
+        [
+            'id' => 6,
+            'action' => 'action2',
+            'permission_id' => 2
+        ],
+        [
+            'id' => 7,
+            'action' => 'action3',
+            'permission_id' => 2
+        ],
+        [
+            'id' => 8,
+            'action' => 'action1',
+            'permission_id' => 3
+        ],
+        [
+            'id' => 9,
+            'action' => 'action2',
+            'permission_id' => 3
+        ],
+        [
+            'id' => 10,
+            'action' => 'action3',
+            'permission_id' => 3
         ],
     ];
 }

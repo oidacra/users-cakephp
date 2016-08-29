@@ -61,11 +61,10 @@ class AccionaACLComponent extends Component
         }
 
         $actions = $this->Permissions
-                        ->getUserActions(
+                        ->getUserActionsByEntity(
                             $userId,
                             $domain,
-                            $entity,
-                            $action);
+                            $entity);
 
        return $this->hasPermissions($actions, $currentActionId);
     }

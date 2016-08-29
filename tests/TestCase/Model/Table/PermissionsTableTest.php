@@ -2,6 +2,7 @@
 namespace Acciona\Users\Test\TestCase\Model\Table;
 
 use Acciona\Users\Model\Table\PermissionsTable;
+use Acciona\Users\Utils\CollectionsUtils;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
@@ -57,22 +58,52 @@ class PermissionsTableTest extends TestCase
     }
 
     /**
-     * Test initialize method
+     * Test findUserPermissions method
      *
      * @return void
      */
-    public function testInitialize()
+    public function testFindUserPermissions()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $result = $this->Permissions->findUserPermissions(1);
+        $this->assertTrue($result->isEmpty());
+
+        $result = $this->Permissions->findUserPermissions(2);
+        $expected = array(array(1, array(1,2)), array(3, array(9,10)));
+        $resultArray = $this->getActionsFromResultSet($result);
+        $this->assertFalse($result->isEmpty());
+        $this->assertEquals($resultArray, $expected);
+
+        $result = $this->Permissions->findUserPermissions(3);
+        $expected = array(array(1, array(1,2)),
+                          array(3, array(9,10)),
+                          array(2, array('*')));
+        $resultArray = $this->getActionsFromResultSet($result);
+        $this->assertFalse($result->isEmpty());
+        $this->assertEquals($resultArray, $expected);
+
+        $result = $this->Permissions->findUserPermissions(4);
+        $this->assertTrue($result->isEmpty());
+
+        //TODO(Danilo): need more tests and data
     }
 
-    /**
-     * Test validationDefault method
-     *
-     * @return void
-     */
-    public function testValidationDefault()
+    private function getActionsFromResultSet($result)
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        return array_map(function ($e) {
+            $actions = CollectionsUtils::flatMap(function ($rol) {
+              return $this->splitActions($rol->_joinData['actions']);
+            }, $e->roles);
+            return array($e->id, $actions);
+        }, $result->toArray());
     }
+
+    private function splitActions($actions)
+    {
+      if ($actions == '*') {
+        return ['*'];
+      }
+
+      return explode(',', $actions);
+    }
+
 }

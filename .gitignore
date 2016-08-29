@@ -2,3 +2,7 @@
 ./vendor/*
 ./tmp
 ./tmp/*
+vendor/
+vendor/*
+tmp/
+tmp/*

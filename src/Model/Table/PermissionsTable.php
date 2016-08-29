@@ -115,14 +115,19 @@ class PermissionsTable extends Table
 
     }
 
+    /**
+     * Returns permissions by user id
+     * @param $userId int
+     */
     public function findUserPermissions($userId)
     {
         $queryRoles = $this->Roles->findRolesByUserId($userId);
         $query = $this
           ->find()
-          ->contain(['Roles' => function ($q) use($queryRoles) {
+          ->contain(['Roles'])
+          ->innerJoinWith('Roles', function ($q) use($queryRoles) {
             return $q->where(['Roles.id IN' => $queryRoles]);
-        }]);
+        });
 
         return $query;
     }

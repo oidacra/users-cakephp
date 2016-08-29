@@ -37,25 +37,6 @@ class UsersFixture extends TestFixture
     ];
     // @codingStandardsIgnoreEnd
 
-    /**
-     * Records
-     *
-     * @var array
-     */
-    public $records = [
-        [
-            'id' => 1,
-            'email' => 'admin@acciona.net',
-            'password' => 'Lorem ipsum dolor sit amet',
-            'administrator' => 1,
-            'active' => 1,
-            'name' => 'Super',
-            'last_name' => 'Administrator',
-            'created' => '2016-04-02 14:57:27',
-            'modified' => '2016-04-02 14:57:27'
-        ],
-    ];
-
    public function init()
    {
        $hasher = new DefaultPasswordHasher();

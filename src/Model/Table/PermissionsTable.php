@@ -122,6 +122,7 @@ class PermissionsTable extends Table
         // TODO(Danilo): return format should be plugin, controller, action
         // TODO(Danilo): check what info has the front-end and send info based on that
 
+        return array();
     }
 
     /**

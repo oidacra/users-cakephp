@@ -166,6 +166,42 @@ class PermissionsTableTest extends TestCase
          $this->assertTrue(empty($result));
     }
 
+    /**
+     * Test getUserActions method
+     *
+     * @return void
+     */
+    public function testGetUserActions()
+    {
+        $result = $this->Permissions->getUserActions(1);
+        $this->assertTrue(empty($result));
+
+        $result = $this->Permissions->getUserActions(2);
+        $expected = [
+            [
+                'domain' => 'Acciona/Users',
+                'entity' => 'Users',
+                'action' => 'index',
+            ],
+            [
+                'domain' => 'Acciona/Users',
+                'entity' => 'Users',
+                'action' => 'add',
+            ],
+            [
+                'domain' => '',
+                'entity' => 'Controllers2',
+                'action' => 'index',
+            ],
+            [
+                'domain' => '',
+                'entity' => 'Controllers2',
+                'action' => 'add',
+            ]
+        ];
+        $this->assertTrue($expected, $result);
+    }
+
     private function getActionsFromResultSet($result)
     {
         return array_map(function ($e) {

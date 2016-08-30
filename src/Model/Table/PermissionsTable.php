@@ -69,6 +69,7 @@ class PermissionsTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
+        // TODO(Danilo): keep just one register for rol,permission
         $rules->add($rules->isUnique(['entity']));
         return $rules;
     }
@@ -88,11 +89,13 @@ class PermissionsTable extends Table
                         ->findUserPermissionsByEntity(
                           $userId,
                           $domain,
-                          $entity)->first();
-      if ($permissions) {
-        return CollectionsUtils::flatMap($permissions->roles, function ($rol) {
-          return $this->splitActions($rol->_joinData['actions']);
-        });
+                          $entity);
+      if (!$permissions->isEmpty()) {
+          return CollectionsUtils::flatMap(function ($e) {
+               return array_unique(CollectionsUtils::flatMap(function ($permission) {
+                   return $this->splitActions($permission->actions);
+               }, $e->_matchingData));
+         }, $permissions->toArray());
       }
 
       return [];
@@ -100,11 +103,16 @@ class PermissionsTable extends Table
 
     private function splitActions($actions)
     {
-      if ($actions == '*') {
-        return ['*'];
-      }
+        if ($actions == '*') {
+            return ['*'];
+        }
 
-      return explode(',', $actions);
+        $strs = explode(',', $actions);
+        $actionArray = array_map(function ($e) {
+            return intval($e);
+        }, $strs);
+
+        return $actionArray;
     }
 
     public function getUserActions($userId)
@@ -112,6 +120,7 @@ class PermissionsTable extends Table
         $permissionsQuery = $this->findUserPermissions($userId);
         // TODO(Danilo): obtain all actions and ids to create a map and then update data
         // TODO(Danilo): return format should be plugin, controller, action
+        // TODO(Danilo): check what info has the front-end and send info based on that
 
     }
 
@@ -122,12 +131,14 @@ class PermissionsTable extends Table
     public function findUserPermissions($userId)
     {
         $queryRoles = $this->Roles->findRolesByUserId($userId);
+
         $query = $this
           ->find()
+          ->select(['Permissions.id', 'RolesPermissions.actions'])
           ->contain(['Roles'])
           ->innerJoinWith('Roles', function ($q) use($queryRoles) {
             return $q->where(['Roles.id IN' => $queryRoles]);
-        });
+          });
 
         return $query;
     }

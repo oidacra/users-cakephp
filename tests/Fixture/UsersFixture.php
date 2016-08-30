@@ -85,6 +85,17 @@ class UsersFixture extends TestFixture
                'created' => date('Y-m-d H:i:s'),
                'modified' => date('Y-m-d H:i:s'),
            ],
+           [
+               'id' => 5,
+               'email' => 'user5@acciona.net',
+               'password' => $hasher->hash('12345%Abcd'),
+               'administrator' => 0,
+               'active' => 1,
+               'name' => 'User5',
+               'last_name' => 'Users',
+               'created' => date('Y-m-d H:i:s'),
+               'modified' => date('Y-m-d H:i:s'),
+           ],
        ];
        parent::init();
    }

@@ -62,5 +62,10 @@ class UsersRolesFixture extends TestFixture
             'user_id' => 4,
             'rol_id' => 1,
         ],
+        [
+            'id' => 5,
+            'user_id' => 5,
+            'rol_id' => 5,
+        ],
     ];
 }

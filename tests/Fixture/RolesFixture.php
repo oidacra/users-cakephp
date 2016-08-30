@@ -47,5 +47,13 @@ class RolesFixture extends TestFixture
             'id' => 3,
             'name' => 'Rol 3',
         ],
+        [
+            'id' => 4,
+            'name' => 'Rol 4',
+        ],
+        [
+            'id' => 5,
+            'name' => 'Rol 5',
+        ],
     ];
 }

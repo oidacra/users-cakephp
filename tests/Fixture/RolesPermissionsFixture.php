@@ -51,14 +51,38 @@ class RolesPermissionsFixture extends TestFixture
         ],
         [
             'id' => 2,
-            'actions' => '*', // Controllers2, all actions
+            'actions' => '*', // Controllers1, all actions
             'rol_id' => 3,
             'permission_id' => 2
         ],
         [
             'id' => 3,
-            'actions' => '9,10', // Controllers3, action2,action3
+            'actions' => '9,10', // Controllers2, action2,action3
             'rol_id' => 2,
+            'permission_id' => 3
+        ],
+        [
+            'id' => 4,
+            'actions' => '1', // Users, index
+            'rol_id' => 5,
+            'permission_id' => 1
+        ],
+        [
+            'id' => 5,
+            'actions' => '3', // Users, edit
+            'rol_id' => 5,
+            'permission_id' => 1
+        ],
+        [
+            'id' => 6,
+            'actions' => '6', // Controllers1, action2
+            'rol_id' => 5,
+            'permission_id' => 2
+        ],
+        [
+            'id' => 7,
+            'actions' => '9', // Controllers2, action2
+            'rol_id' => 5,
             'permission_id' => 3
         ],
     ];

@@ -67,6 +67,22 @@ class PermissionsActionsTable extends Table
     }
 
     /**
+     * Return a map of actions from id to name
+     *
+     * @return array[int -> string]
+     */
+    public function getActionsMap()
+    {
+        $records = $this->find();
+        $actionsMap = [];
+        foreach ($records as $record) {
+            $actionsMap[intval($record->id)] = $record->action;
+        }
+
+        return $actionsMap;
+    }
+
+    /**
      * Return the action id depending on the domain, entity and action text
      *
      * @param String $domain

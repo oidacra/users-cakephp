@@ -4,6 +4,7 @@ namespace Acciona\Users\Model\Table;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Cake\Log\Log;
 use Acciona\Users\Utils\CollectionsUtils;
 
 /**
@@ -95,10 +96,54 @@ class PermissionsTable extends Table
                return array_unique(CollectionsUtils::flatMap(function ($permission) {
                    return $this->splitActions($permission->actions);
                }, $e->_matchingData));
-         }, $permissions->toArray());
+          }, $permissions->toArray());
       }
 
       return [];
+    }
+
+    public function getUserActions($userId)
+    {
+        $permissions = $this->findUserPermissions($userId);
+
+        if (!$permissions->isEmpty()) {
+            // get all actions map[id -> name]
+            $actionsMap = $this->PermissionsActions->getActionsMap();
+            $results = CollectionsUtils::flatMap(function ($permission) use($actionsMap) {
+                $actionsResults = CollectionsUtils::flatMap(
+                function ($rolesPermission) use($actionsMap, $permission) {
+                    $actions = $this->splitActions($rolesPermission->actions);
+                    return array_map(function ($action) use($permission, $actionsMap) {
+                        if ($action == '*') {
+                            return [
+                                'domain' => $permission->domain,
+                                'entity' => $permission->entity,
+                                'action' => '*',
+                            ];
+                        } else {
+                            if (!isset($actionsMap[$action])) {
+                                Log::write('error',
+                                    __('Action {1} for permission {2}
+                                        does not exist', [$action,
+                                        $permission->entity]));
+                                return [];
+                            }
+                            return [
+                                'domain' => $permission->domain,
+                                'entity' => $permission->entity,
+                                'action' => $actionsMap[$action],
+                            ];
+                        }
+                    }, $actions);
+                }, $permission->_matchingData);
+
+                return $actionsResults;
+             }, $permissions->toArray());
+
+             return $results;
+        }
+
+        return [];
     }
 
     private function splitActions($actions)
@@ -115,16 +160,6 @@ class PermissionsTable extends Table
         return $actionArray;
     }
 
-    public function getUserActions($userId)
-    {
-        $permissionsQuery = $this->findUserPermissions($userId);
-        // TODO(Danilo): obtain all actions and ids to create a map and then update data
-        // TODO(Danilo): return format should be plugin, controller, action
-        // TODO(Danilo): check what info has the front-end and send info based on that
-
-        return array();
-    }
-
     /**
      * Returns permissions by user id
      * @param $userId int
@@ -135,7 +170,12 @@ class PermissionsTable extends Table
 
         $query = $this
           ->find()
-          ->select(['Permissions.id', 'RolesPermissions.actions'])
+          ->select([
+              'Permissions.id',
+              'Permissions.entity',
+              'Permissions.domain',
+              'RolesPermissions.actions'
+          ])
           ->contain(['Roles'])
           ->innerJoinWith('Roles', function ($q) use($queryRoles) {
             return $q->where(['Roles.id IN' => $queryRoles]);

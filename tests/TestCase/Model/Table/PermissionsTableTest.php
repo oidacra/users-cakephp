@@ -177,6 +177,7 @@ class PermissionsTableTest extends TestCase
         $this->assertTrue(empty($result));
 
         $result = $this->Permissions->getUserActions(2);
+        $this->assertFalse(empty($result));
         $expected = [
             [
                 'domain' => 'Acciona/Users',
@@ -191,15 +192,75 @@ class PermissionsTableTest extends TestCase
             [
                 'domain' => '',
                 'entity' => 'Controllers2',
-                'action' => 'index',
+                'action' => 'action2',
             ],
             [
                 'domain' => '',
                 'entity' => 'Controllers2',
-                'action' => 'add',
+                'action' => 'action3',
             ]
         ];
-        $this->assertTrue($expected, $result);
+        $this->assertEquals($expected, $result);
+
+        $result = $this->Permissions->getUserActions(3);
+        $this->assertFalse(empty($result));
+        $expected = [
+            [
+                'domain' => 'Acciona/Users',
+                'entity' => 'Users',
+                'action' => 'index',
+            ],
+            [
+                'domain' => 'Acciona/Users',
+                'entity' => 'Users',
+                'action' => 'add',
+            ],
+            [
+                'domain' => '',
+                'entity' => 'Controllers2',
+                'action' => 'action2',
+            ],
+            [
+                'domain' => '',
+                'entity' => 'Controllers2',
+                'action' => 'action3',
+            ],
+            [
+                'domain' => '',
+                'entity' => 'Controllers1',
+                'action' => '*',
+            ],
+        ];
+        $this->assertEquals($expected, $result);
+
+        $result = $this->Permissions->getUserActions(4);
+        $this->assertTrue(empty($result));
+
+        $result = $this->Permissions->getUserActions(5);
+        $this->assertFalse(empty($result));
+        $expected = [
+            [
+                'domain' => 'Acciona/Users',
+                'entity' => 'Users',
+                'action' => 'index',
+            ],
+            [
+                'domain' => 'Acciona/Users',
+                'entity' => 'Users',
+                'action' => 'edit',
+            ],
+            [
+                'domain' => '',
+                'entity' => 'Controllers1',
+                'action' => 'action2',
+            ],
+            [
+                'domain' => '',
+                'entity' => 'Controllers2',
+                'action' => 'action2',
+            ],
+        ];
+        $this->assertEquals($expected, $result);
     }
 
     private function getActionsFromResultSet($result)

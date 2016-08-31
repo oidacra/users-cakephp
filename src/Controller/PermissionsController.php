@@ -24,7 +24,7 @@ class PermissionsController extends AppController
     }
 
     /**
-     * Return the permissions of the logged user
+     * Return the permissions of the current user
      *
      * @return \Cake\Network\Response|null
      */
@@ -33,7 +33,9 @@ class PermissionsController extends AppController
         $this->request->allowMethod(['get']);
         $user = $this->Auth->identify();
         if ($user) {
-
+            $actions = $this->Permissions->getUserActions($user->id);
+            $this->set(compact('actions'));
+            $this->set('_serialize', ['actions']);
         } else {
             throw new UnauthorizedException(__('User not authenticated.'));
         }

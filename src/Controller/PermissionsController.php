@@ -9,6 +9,16 @@ use Acciona\Users\Controller\AppController;
  */
 class PermissionsController extends AppController
 {
+    /**
+     * Initialize the controller and allow permissions
+     */
+    public function initialize()
+    {
+        parent::initialize();
+        if ($this->Auth) {
+            $this->Auth->allow(['permissions']);
+        }
+    }
 
     /**
      * Index method
@@ -33,7 +43,7 @@ class PermissionsController extends AppController
         $this->request->allowMethod(['get']);
         $user = $this->Auth->identify();
         if ($user) {
-            $actions = $this->Permissions->getUserActions($user->id);
+            $actions = $this->Permissions->getUserActions($user['id']);
             $this->set(compact('actions'));
             $this->set('_serialize', ['actions']);
         } else {

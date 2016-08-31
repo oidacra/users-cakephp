@@ -1,9 +1,7 @@
 <?php
-
 namespace Acciona\Users\Controller;
 
 use App\Controller\AppController as BaseController;
-use Cake\Error\Debugger;
 
 class AppController extends BaseController
 {

@@ -40,6 +40,9 @@ $TMP->create(TMP . 'cache/models', 0777);
 $TMP->create(TMP . 'cache/persistent', 0777);
 $TMP->create(TMP . 'cache/views', 0777);
 
+// set salt
+Cake\Utility\Security::salt(uniqid(mt_rand(), true));
+
 $cache = [
     'default' => [
         'engine' => 'File',
@@ -85,6 +88,9 @@ collection((array)Cake\Core\Configure::read('Users.config'))->each(function ($fi
 }*/
 Cake\Routing\DispatcherFactory::add('Routing');
 Cake\Routing\DispatcherFactory::add('ControllerFactory');
+
+class_alias('Acciona\Users\Test\App\Controller\AppController', 'App\Controller\AppController');
+
 
 // Ensure default test connection is defined
 if (!getenv('db_dsn')) {

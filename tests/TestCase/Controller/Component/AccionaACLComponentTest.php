@@ -58,5 +58,22 @@ class AccionaACLComponentTest extends TestCase
 
         $user['id'] = 2;
         $this->assertTrue($this->component->check($user, $this->request));
+
+        $this->request->param('action', 'add');
+        $this->assertTrue($this->component->check($user, $this->request));
+
+        $this->request->param('action', 'edit');
+        $this->assertFalse($this->component->check($user, $this->request));
+
+        $this->request->param('controller', 'Controllers1');
+        $this->request->param('plugin', '');
+        $this->request->param('action', 'action1');
+        $this->assertFalse($this->component->check($user, $this->request));
+
+        $user['id'] = 3;
+        $this->assertTrue($this->component->check($user, $this->request));
+
+        $this->request->param('action', 'action2');
+        $this->assertTrue($this->component->check($user, $this->request));
     }
 }

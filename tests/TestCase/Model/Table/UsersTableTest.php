@@ -93,8 +93,8 @@ class UsersTableTest extends TestCase
     public function testValidationPassword()
     {
         // lacks a upper case
-        $password = '123456%abcd';
-        $user = $this->getUser($password = $password, $retypePassword = $password);
+        $pass = '123456%abcd';
+        $user = $this->getUser($password = $pass, $retypePassword = $pass);
 
         $result = $this->Users->save($user);
         $this->assertFalse($result);

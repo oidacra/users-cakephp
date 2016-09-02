@@ -1,6 +1,7 @@
 <?php
 namespace Acciona\Users\Controller\Component;
 
+use Acciona\Users\Auth\AuthChecker;
 use Cake\Controller\Component;
 use Cake\Core\App;
 use Cake\Error\Debugger;
@@ -16,7 +17,7 @@ use Cake\Log\Log;
  * @property \Acciona\Users\Model\Table\PermissionsTable $Permissions
  * @property \Acciona\Users\Model\Table\PermissionsActionsTable $PermissionsActions
  */
-class AccionaACLComponent extends Component
+class AccionaACLComponent extends Component implements AuthChecker
 {
     public function __construct(ComponentRegistry $registry, array $config)
     {
@@ -73,7 +74,7 @@ class AccionaACLComponent extends Component
     {
       if ($actions) {
          foreach ($actions as $actionId) {
-           if ($action == '*' || $actionId == $currentActionId) {
+           if ($actionId == '*' || $actionId == $currentActionId) {
              return true;
            }
          }

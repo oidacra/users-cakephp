@@ -28,7 +28,6 @@ class AccionaACLComponentTest extends TestCase
         'plugin.acciona/users.users_roles'
     ];
 
-
     public function setUp()
     {
         parent::setUp();

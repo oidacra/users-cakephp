@@ -58,6 +58,8 @@ class AccionaAuthComponent extends Component
             $config['authenticate'] = [
                 'Form' => [
                     'scope' => ['Users.active' => 1],
+                    'finder' => 'auth',
+                    'userModel' => 'Acciona/Users.Users',
                     'fields' => ['username' => 'email']
                 ],
                 'ADmad/JwtAuth.Jwt' => [
@@ -67,6 +69,8 @@ class AccionaAuthComponent extends Component
                     'fields' => [
                         'username' => 'email'
                     ],
+                    'finder' => 'auth',
+                    'userModel' => 'Acciona/Users.Users',
                     'queryDatasource' => true
                 ],
             ];

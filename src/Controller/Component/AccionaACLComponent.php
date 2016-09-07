@@ -11,7 +11,7 @@ use Cake\Controller\ComponentRegistry;
 use Cake\Log\Log;
 
 /**
- * Verifies if the user has permissions to execute the action
+ * Verifies if the user has permissions to execute an action
  *
  * @package Acciona\Users\Controller\Component
  * @property \Acciona\Users\Model\Table\PermissionsTable $Permissions
@@ -43,6 +43,12 @@ class AccionaACLComponent extends Component implements AuthChecker
       return TableRegistry::get($name, $config);
     }
 
+    /**
+     * Verifies whether the user has access to an specific action
+     *
+     * @param $user array with id and extra information
+     * @param $request Request
+     */
     public function check($user, Request $request)
     {
         $userId = $user['id'];

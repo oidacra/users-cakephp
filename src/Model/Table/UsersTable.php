@@ -5,6 +5,7 @@ use Acciona\Users\Model\Entity\User;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
+use Cake\Event\Event;
 use Cake\Validation\Validator;
 use Cake\Core\Configure;
 use Cake\Error\Debugger;
@@ -16,6 +17,8 @@ use Cake\Utility\Hash;
 class UsersTable extends Table
 {
     protected $minPasswordLen;
+    const EVENT_BEFORE_AUTH = 'Users.Model.Users.beforeAuth';
+
     /**
      * Initialize method
      *
@@ -39,7 +42,7 @@ class UsersTable extends Table
 
         $this->belongsToMany('Roles', [
             'foreignKey' => 'user_id',
-            'targetForeignKey' => 'role_id',
+            'targetForeignKey' => 'rol_id',
             'joinTable' => 'users_roles',
             'className' => 'Acciona/Users.Roles'
         ]);
@@ -126,6 +129,24 @@ class UsersTable extends Table
         $user->active = 0;
         return $this->save($user);
     }
+
+    public function findAuth(Query $query, array $options)
+    {
+        $query
+            ->select(['id', 'email', 'password'])
+            ->where(['Users.active' => 1]);
+        // dispatch events registered
+        $event = new Event(UsersTable::EVENT_BEFORE_AUTH, $this, [
+            'query' => $query
+        ]);
+        $this->eventManager()->dispatch($event);
+        if (!empty($event->result)) {
+            $query = $event->result;
+        }
+
+        return $query;
+    }
+
 
     /**
      * Returns a rules checker object that will be used for validating

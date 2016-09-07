@@ -5,6 +5,25 @@ use Acciona\Users\Model\Table\UsersTable;
 use Acciona\Users\Model\Entity\User;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
+use Cake\Event\EventListenerInterface;
+
+class UsersQueryAuth implements EventListenerInterface
+{
+
+    public function implementedEvents()
+    {
+        return [
+            UsersTable::EVENT_BEFORE_AUTH => 'addRoles',
+        ];
+    }
+
+    public function addRoles($event, $query)
+    {
+        $query->contain('Roles');
+
+        return $query;
+    }
+}
 
 /**
  * Acciona\Users\Model\Table\UsersTable Test Case
@@ -25,7 +44,12 @@ class UsersTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'plugin.acciona/users.users'
+        'plugin.acciona/users.permissions',
+        'plugin.acciona/users.permissions_actions',
+        'plugin.acciona/users.roles',
+        'plugin.acciona/users.roles_permissions',
+        'plugin.acciona/users.users',
+        'plugin.acciona/users.users_roles',
     ];
 
     /**
@@ -141,6 +165,31 @@ class UsersTableTest extends TestCase
 
         return $user;
     }
+
+    /**
+     * Test findAuth method
+     *
+     * @return void
+     */
+     public function testFindAuth()
+     {
+         $query = $this->Users->find()->where([
+             'Users.email' => 'user2@acciona.net',
+         ]);
+
+         // register event
+         $usersQueryAuth = new UsersQueryAuth();
+         $this->Users->eventManager()->on($usersQueryAuth);
+
+         $result = $this->Users->findAuth($query, [])->first();
+         $this->assertEquals(1, count($result->roles));
+
+         $query = $this->Users->find()->where([
+             'Users.email' => 'user3@acciona.net',
+         ]);
+         $result = $this->Users->findAuth($query, [])->first();
+         $this->assertEquals(2, count($result->roles));
+     }
 
     /**
      * Test buildRules method

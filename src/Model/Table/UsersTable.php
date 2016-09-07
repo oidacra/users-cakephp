@@ -134,7 +134,7 @@ class UsersTable extends Table
     {
         // dispatch events registered
         $event = new Event(UsersTable::EVENT_BEFORE_AUTH, $this, [
-            'query' => $query
+            'Users' => $this, 'query' => $query
         ]);
         $this->eventManager()->dispatch($event);
         if (!empty($event->result)) {

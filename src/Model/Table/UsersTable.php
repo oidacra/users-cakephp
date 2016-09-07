@@ -132,9 +132,6 @@ class UsersTable extends Table
 
     public function findAuth(Query $query, array $options)
     {
-        $query
-            ->select(['id', 'email', 'password'])
-            ->where(['Users.active' => 1]);
         // dispatch events registered
         $event = new Event(UsersTable::EVENT_BEFORE_AUTH, $this, [
             'query' => $query

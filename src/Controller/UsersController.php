@@ -28,7 +28,7 @@ class UsersController extends AppController
     {
         parent::initialize();
         if ($this->Auth) {
-            $this->Auth->allow(['login', 'logout', 'passwordRecovery', 'reset']);
+            $this->Auth->allow(['login', 'logout', 'passwordRecovery', 'reset', 'user']);
         }
 
         $config = ['className' => App::className('Acciona/Users.PasswordTokens', 'Model/Table')];

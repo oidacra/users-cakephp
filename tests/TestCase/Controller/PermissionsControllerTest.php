@@ -9,7 +9,6 @@ use Cake\TestSuite\IntegrationTestCase;
  */
 class PermissionsControllerTest extends IntegrationTestCase
 {
-
     /**
      * Fixtures
      *

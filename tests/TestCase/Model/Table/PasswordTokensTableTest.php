@@ -4,9 +4,10 @@ namespace Acciona\Users\Test\TestCase\Model\Table;
 use Acciona\Users\Model\Table\PasswordTokensTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
+use phpmock\MockBuilder;
 
 /**
- * App\Model\Table\PasswordTokensTable Test Case
+ * @property \Acciona\Users\Model\Table\PasswordTokensTable $PasswordTokens
  */
 class PasswordTokensTableTest extends TestCase
 {
@@ -33,6 +34,17 @@ class PasswordTokensTableTest extends TestCase
         parent::setUp();
         $config = TableRegistry::exists('PasswordTokens') ? [] : ['className' => 'Acciona\Users\Model\Table\PasswordTokensTable'];
         $this->PasswordTokens = TableRegistry::get('PasswordTokens', $config);
+
+        $builder = new MockBuilder();
+        $builder->setNamespace('Acciona\Users\Model\Table')
+            ->setName("time")
+            ->setFunction(
+                function () {
+                    return 1;
+                }
+            );
+        $this->mock = $builder->build();
+        $this->mock->enable();
     }
 
     /**
@@ -43,6 +55,7 @@ class PasswordTokensTableTest extends TestCase
     public function tearDown()
     {
         unset($this->PasswordTokens);
+        $this->mock->disable();
 
         parent::tearDown();
     }
@@ -52,28 +65,17 @@ class PasswordTokensTableTest extends TestCase
      *
      * @return void
      */
-    public function testInitialize()
+    public function testCreateAndSaveToken()
     {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
+        $token = $this->PasswordTokens->generateAndSaveToken(2, 300);
+        // the record must exists
+        $record = $this->PasswordTokens->find()->where(['PasswordTokens.token' => $token]);
 
-    /**
-     * Test validationDefault method
-     *
-     * @return void
-     */
-    public function testValidationDefault()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
+        $this->assertFalse($record->isEmpty());
 
-    /**
-     * Test buildRules method
-     *
-     * @return void
-     */
-    public function testBuildRules()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
+        $data = $record->first();
+        $this->assertEquals(2, $data->user_id);
+        $this->assertEquals($token, $data->token);
+        $this->assertEquals(301, $data->expiration);
     }
 }

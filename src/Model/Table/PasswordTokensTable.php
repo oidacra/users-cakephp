@@ -74,11 +74,11 @@ class PasswordTokensTable extends Table
     }
 
     /**
-     * Create new token in database and return the token string
+     * Generate a new token in database and return the token string
      *
      * @return string | boolean
      */
-    public function createToken($userId, $expiration)
+    public function generateAndSaveToken($userId, $expiration)
     {
         $tokenRecord = $this->newEntity();
         $tokenRecord->token = bin2hex(random_bytes(78));

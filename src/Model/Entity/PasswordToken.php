@@ -9,7 +9,7 @@ use Cake\ORM\Entity;
  * @property int $id
  * @property string $token
  * @property int $user_id
- * @property \App\Model\Entity\User $user
+ * @property \Acciona\Users\Model\Entity\User $user
  * @property \Cake\I18n\Time $expiration
  */
 class PasswordToken extends Entity

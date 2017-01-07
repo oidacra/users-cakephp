@@ -17,7 +17,7 @@ class UsersQueryAuth implements EventListenerInterface
         ];
     }
 
-    public function addRoles($event, $query)
+    public function addRoles($event, $Users, $query)
     {
         $query->contain('Roles');
 

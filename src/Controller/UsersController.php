@@ -15,8 +15,8 @@ use Firebase\JWT\JWT;
 /**
  * Users Controller
  *
- * @property \Users\Model\Table\UsersTable $Users
- * @property \Users\Model\Table\PasswordTokens $PasswordTokens
+ * @property \Acciona\Users\Model\Table\UsersTable $Users
+ * @property \Acciona\Users\Model\Table\PasswordTokens $PasswordTokens
  * @author Danilo Dominguez Perez
  */
 class UsersController extends AppController
@@ -31,8 +31,9 @@ class UsersController extends AppController
             $this->Auth->allow(['login', 'logout', 'passwordRecovery', 'reset', 'user']);
         }
 
-        $config = ['className' => App::className('Acciona/Users.PasswordTokens', 'Model/Table')];
+        $config = TableRegistry::exists('PasswordTokens') ? [] : ['className' => 'Acciona\Users\Model\Table\PasswordTokensTable'];
         $this->PasswordTokens = TableRegistry::get('PasswordTokens', $config);
+        $this->emailer = new Email();
     }
 
     protected function getToken($user)
@@ -159,7 +160,10 @@ class UsersController extends AppController
                         'success' => true,
                         'message' => $message
                     ];
-
+                    $this->setData($data);
+                    if (!$this->isRestCall()) {
+                        return $this->redirect(['action' => 'login']);
+                    }
                 } else {
                     $message = __('There was an error while sending the
                                     email. Please try again or contact an
@@ -179,6 +183,10 @@ class UsersController extends AppController
                     'message' => $message
                 ];
                 $this->setData($data);
+
+                if ($this->isRestCall()) {
+                    throw new BadRequestException(__('Incorrect email.'));
+                }
             }
         } else {
             throw new BadRequestException(__('Please provide an email.'));
@@ -193,10 +201,10 @@ class UsersController extends AppController
     {
         $expiration = Configure::read('Users.PasswordRecovery.expiration');
 
-        return $this->PasswordTokens->createToken($userId, $expiration);
+        return $this->PasswordTokens->generateAndSaveToken($userId, $expiration);
     }
 
-    protected function sendRecoveryEmail($email, $token)
+    protected function sendRecoveryEmail($token, $email)
     {
         try {
             $template = Configure::read('Users.PasswordRecovery.template');
@@ -205,8 +213,8 @@ class UsersController extends AppController
             $link = Configure::read('Users.PasswordRecovery.link') .
                     '?token=' . $token;
 
-            $emailer = new Email();
-            $email->template($template, $layout)
+            $Emailer = $this->getEmailer();
+            $Emailer->template($template, $layout)
                 ->to($email)
                 ->from($sender)
                 ->viewVars(['link' => $link])
@@ -232,7 +240,7 @@ class UsersController extends AppController
         // TODO: check if this works with Jwt
         $redirectAction = $this->Auth->logout();
         if (!$this->isRestCall()) {
-          return $this->redirect($redictectAction);
+          return $this->redirect($redirectAction);
       } else {
           $this->set(['success' => true]);
       }
@@ -281,6 +289,10 @@ class UsersController extends AppController
         }
 
         $this->setData($user);
+    }
+
+    public function getEmailer() {
+        return $this->emailer;
     }
 
     public function register()
@@ -374,11 +386,10 @@ class UsersController extends AppController
     private function setData($user) {
         if (!$this->isRestCall()) {
           $this->set(compact('user'));
-          $this->set('_serialize', ['user']);
         } else {
           $this->set($user);
-          //$this->set('_serialize', ['response']);
         }
+        $this->set('_serialize', ['user']);
     }
 
     /**

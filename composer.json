@@ -9,7 +9,8 @@
 
     },
     "require-dev": {
-        "phpunit/phpunit": "*"
+        "phpunit/phpunit": "*",
+        "php-mock/php-mock": "*"
     },
     "autoload": {
         "psr-4": {

@@ -87,7 +87,6 @@ class UsersController extends AppController
                 $this->Flash->error(__('Invalid captcha'));
             }*/
         }
-
         $this->setData($user);
     }
 
@@ -387,7 +386,7 @@ class UsersController extends AppController
         if (!$this->isRestCall()) {
           $this->set(compact('user'));
         } else {
-          $this->set($user);
+          $this->set('user',$user);
         }
         $this->set('_serialize', ['user']);
     }

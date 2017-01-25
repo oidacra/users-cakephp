@@ -116,14 +116,18 @@ class UsersControllerTest extends IntegrationTestCase
         $this->assertResponseOk();
         // check password was not correct
         $data = json_decode($this->_response->body());
-        $this->assertEquals(false, $data['success']);
+        $this->assertEquals(false, $data->user->success);
 
         //correct token and password
         $this->post('/users/password_recovery.json', ['token' => $token, 'password' => '123%Abcd']);
         $this->assertResponseOk();
         $data = json_decode($this->_response->body());
-       // \Cake\Error\Debugger::dump($this->_response, 10);
-        $this->assertEquals(true, $data['success']);
+        $this->assertEquals(true, $data->user->success);
+
+        // check that token is not active
+        $result = $this->PasswordTokens->findByToken($token);
+        $this->assertFalse($result->isEmpty());
+        $this->assertEquals(0, $result->first()->active);
     }
 
     public function controllerSpy($event, $controller = null){

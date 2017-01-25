@@ -106,13 +106,13 @@ class UsersController extends AppController
         $this->request->allowMethod(['patch', 'post', 'put']);
         $token = array_key_exists('token', $this->request->data) ? $this->request->data['token'] : null;
         if ($token == null) {
-            throw new BadRequestException(__('Wrong user token.'));
+            throw new BadRequestException(__('Wrong token.'));
         }
         // validate token
         $tokenRecord = $this->Users->PasswordTokens->find()
             ->where(['token' => $token])
             ->first();
-        if (!$tokenRecord || $tokenRecord->expiration > time()) {
+        if (!$tokenRecord || $tokenRecord->expiration > time() || $tokenRecord->active == 0) {
             throw new BadRequestException(__('Wrong token or it has already expired.'));
         }
 
@@ -138,7 +138,7 @@ class UsersController extends AppController
               'errors' => $user->errors(),
             ];
         }
-        $this->Users->saveAndUpdateToken($user, $tokenRecord);
+
         $this->setData($user);
     }
 
@@ -361,24 +361,25 @@ class UsersController extends AppController
         $user = $this->Users->get($id, [
             'fields' => ['id']
         ]);
+        $result = [];
         if ($this->request->is(['patch', 'post', 'put'])) {
             $user = $this->Users->patchEntity($user, $this->request->data);
             if ($this->Users->save($user)) {
                 $this->Flash->success(__('The password has been updated.'));
-                $user = ['success' => true];
+                $result = ['success' => true];
                 if (!$this->isRestCall()) {
                     return $this->redirect(['action' => 'index']);
                 }
             } else {
                 $this->Flash->error(__('The password could not be updated. Please, try again.'));
-                $user = [
+                $result = [
                   'success' => false,
                   'errors' => $user->errors(),
                 ];
             }
         }
 
-        $this->setData($user);
+        $this->set($result);
     }
 
     private function setData($user) {

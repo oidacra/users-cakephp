@@ -136,10 +136,9 @@ class UsersTable extends Table
                 return false;
             }
 
-            // TODO: implement token update
             // update token and return result of update
-
-            return true;
+            $passwordToken->active = 0;
+            return $this->PasswordTokens->save($passwordToken);
         });
     }
 

@@ -130,6 +130,19 @@ class UsersTable extends Table
         return $this->save($user);
     }
 
+    public function saveAndUpdateToken(User $user, $passwordToken) {
+        return $this->connection()->transactional(function () use ($user, $passwordToken) {
+            if (!$this->save($user)) {
+                return false;
+            }
+
+            // TODO: implement token update
+            // update token and return result of update
+
+            return true;
+        });
+    }
+
     public function findAuth(Query $query, array $options)
     {
         // dispatch events registered

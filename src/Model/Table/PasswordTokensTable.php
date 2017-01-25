@@ -53,6 +53,10 @@ class PasswordTokensTable extends Table
             ->notEmpty('token');
 
         $validator
+            ->requirePresence('active', 'create')
+            ->notEmpty('active');
+
+        $validator
             ->dateTime('expiration')
             ->requirePresence('expiration', 'create')
             ->notEmpty('expiration');
@@ -84,6 +88,7 @@ class PasswordTokensTable extends Table
         $tokenRecord->token = bin2hex(random_bytes(78));
         $tokenRecord->expiration = time() + $expiration;
         $tokenRecord->user_id = $userId;
+        $tokenRecord->active = 1;
         if (!$this->save($tokenRecord)) {
             return false;
         }

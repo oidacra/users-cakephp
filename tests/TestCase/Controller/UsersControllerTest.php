@@ -62,8 +62,6 @@ class UsersControllerTest extends IntegrationTestCase
         ]);
         $this->post('/users/reset.json', ['email' => 'user33@acciona.net']);
         $this->assertResponseCode(400);
-
-
     }
 
     /**
@@ -86,6 +84,46 @@ class UsersControllerTest extends IntegrationTestCase
 
         $record = $query->first();
         $this->assertEquals(301, $record->expiration);
+    }
+
+    public function testPasswordRecovery() {
+        $this->configRequest([
+            'headers' => ['Accept' => 'application/json']
+        ]);
+        $this->post('/users/reset.json', ['email' => 'user3@acciona.net']);
+        $this->assertResponseOk();
+
+        $query = $this->PasswordTokens
+            ->find()
+            ->where(['PasswordTokens.user_id' => 3])
+            ->order(['PasswordTokens.expiration DESC']);
+        $this->assertFalse($query->isEmpty());
+
+        $record = $query->first();
+        $token = $record->token;
+
+        // incorrect token
+        $this->post('/users/password_recovery.json', ['token' => $token . '123']);
+        $this->assertResponseCode(400);
+
+        // correct token no password
+        $this->mock->disable();
+        $this->post('/users/password_recovery.json', ['token' => $token]);
+        $this->assertResponseCode(400);
+
+        // short password
+        $this->post('/users/password_recovery.json', ['token' => $token, 'password' => '123']);
+        $this->assertResponseOk();
+        // check password was not correct
+        $data = json_decode($this->_response->body());
+        $this->assertEquals(false, $data['success']);
+
+        //correct token and password
+        $this->post('/users/password_recovery.json', ['token' => $token, 'password' => '123%Abcd']);
+        $this->assertResponseOk();
+        $data = json_decode($this->_response->body());
+       // \Cake\Error\Debugger::dump($this->_response, 10);
+        $this->assertEquals(true, $data['success']);
     }
 
     public function controllerSpy($event, $controller = null){

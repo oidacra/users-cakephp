@@ -102,45 +102,44 @@ class UsersController extends AppController
         }
     }
 
-    public function passwordRecovery($id, $token)
+    public function passwordRecovery()
     {
-        if ($id == null || $token == null) {
-            throw new BadRequestException(__('Wrong user id or token.'));
+        $this->request->allowMethod(['patch', 'post', 'put']);
+        $token = array_key_exists('token', $this->request->data) ? $this->request->data['token'] : null;
+        if ($token == null) {
+            throw new BadRequestException(__('Wrong user token.'));
         }
-
-        // validate user
-        $user = $this->Users->get($id, [
-            'fields' => ['id']
-        ]);
-        if (!$user) {
-            throw new BadRequestException(__('Wrong user id.'));
-        }
-
         // validate token
         $tokenRecord = $this->Users->PasswordTokens->find()
-            ->where(['user_id' => $user->id, 'token' => $token])
+            ->where(['token' => $token])
             ->first();
         if (!$tokenRecord || $tokenRecord->expiration > time()) {
             throw new BadRequestException(__('Wrong token or it has already expired.'));
         }
 
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $user = $this->Users->patchEntity($user, $this->request->data);
-            if ($this->Users->save($user)) {
-                $this->Flash->success(__('The password has been updated.'));
-                $user = ['success' => true];
-                if (!$this->isRestCall()) {
-                    return $this->redirect(['action' => 'index']);
-                }
-            } else {
-                $this->Flash->error(__('The password could not be updated. Please, try again.'));
-                $user = [
-                  'success' => false,
-                  'errors' => $user->errors(),
-                ];
-            }
+        // validate request has possword
+        if (!array_key_exists('password', $this->request->data)) {
+            throw new BadRequestException(__('Password was not provided.'));
         }
 
+        $user = $this->Users->get($tokenRecord->user_id, [
+            'fields' => ['id']
+        ]);
+        $user = $this->Users->patchEntity($user, $this->request->data);
+        if ($this->Users->saveAndUpdateToken($user, $tokenRecord)) {
+            $this->Flash->success(__('The password has been updated.'));
+            $user = ['success' => true];
+            if (!$this->isRestCall()) {
+                return $this->redirect(['action' => 'index']);
+            }
+        } else {
+            $this->Flash->error(__('The password could not be updated. Please, try again.'));
+            $user = [
+              'success' => false,
+              'errors' => $user->errors(),
+            ];
+        }
+        $this->Users->saveAndUpdateToken($user, $tokenRecord);
         $this->setData($user);
     }
 

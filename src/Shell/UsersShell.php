@@ -3,9 +3,6 @@ namespace Acciona\Users\Shell;
 
 use Acciona\Users\Model\Entity\User;
 use Cake\Console\Shell;
-use Cake\Core\App;
-use Cake\ORM\TableRegistry;
-
 
 /**
  * Creates a user in the database
@@ -21,10 +18,6 @@ class UsersShell extends Shell
     public function initialize()
     {
         parent::initialize();
-       /* $config = [];
-        if (!TableRegistry::exists('Users')) {
-            $config = ['className' => App::className('Acciona/Users.UsersTable', 'Model/Table')];
-        }*/
         $this->Users = $this->loadModel('Acciona/Users.Users'); //TableRegistry::get('Users', $config);
     }
 

@@ -8,7 +8,6 @@ use Cake\ORM\Table;
 use Cake\Event\Event;
 use Cake\Validation\Validator;
 use Cake\Core\Configure;
-use Cake\Error\Debugger;
 use Cake\Utility\Hash;
 /**
  * Users Model

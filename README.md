@@ -50,3 +50,9 @@ Para crear todas las tablas necesarias para utilizar el plugin
  bin/cake Acciona/Users.Permissions
 
 ```
+
+### Crear usuarios desde la consola
+```
+ bin/cake Acciona/Users.Users
+
+```

@@ -48,6 +48,7 @@ class AccionaACLComponent extends Component implements AuthChecker
      *
      * @param $user array with id and extra information
      * @param $request Request
+     * @return boolean
      */
     public function check($user, Request $request)
     {

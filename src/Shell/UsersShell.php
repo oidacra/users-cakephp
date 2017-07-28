@@ -1,7 +1,6 @@
 <?php
 namespace Acciona\Users\Shell;
 
-use Acciona\Users\Model\Entity\User;
 use Cake\Console\Shell;
 
 /**

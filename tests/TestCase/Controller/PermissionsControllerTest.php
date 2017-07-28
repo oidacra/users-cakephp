@@ -43,7 +43,7 @@ class PermissionsControllerTest extends IntegrationTestCase
         $data = json_decode($this->_response->body());
 
         // prepare get query for permissions
-        $token = $data->data->token;
+        $token = $data->user->data->token;
         $this->configRequest([
             'headers' => [
                 'Accept' => 'application/json',

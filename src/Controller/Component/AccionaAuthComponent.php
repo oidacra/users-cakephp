@@ -33,7 +33,7 @@ class AccionaAuthComponent extends Component
         parent::initialize($config);
 
         // initialize the auth component
-        $this->_registry->getController()->loadComponent('Auth', $this->getConfig($config));
+        $this->_registry->getController()->loadComponent('Auth', $this->getAuthConfigArray($config));
         $this->_registry->getController()->Auth->allow([
             'login',
             'register',
@@ -45,7 +45,7 @@ class AccionaAuthComponent extends Component
         ]);
     }
 
-    private function getConfig(array $passedConfig)
+    private function getAuthConfigArray(array $passedConfig)
     {
         $config = array_merge($this->defaultConfig, $passedConfig);
         $config['storage'] = 'Session';

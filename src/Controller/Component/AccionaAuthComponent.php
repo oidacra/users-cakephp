@@ -64,7 +64,6 @@ class AccionaAuthComponent extends Component
                 ],
                 'ADmad/JwtAuth.Jwt' => [
                     'parameter' => 'token',
-                    'userModel' => 'Users',
                     'scope' => ['Users.active' => 1],
                     'fields' => [
                         'username' => 'email'

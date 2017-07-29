@@ -56,7 +56,8 @@ class UsersControllerTest extends IntegrationTestCase
      *
      * @return void
      */
-    public function testResetBadEmail() {
+    public function testResetBadEmail()
+    {
         $this->configRequest([
             'headers' => ['Accept' => 'application/json']
         ]);
@@ -69,7 +70,8 @@ class UsersControllerTest extends IntegrationTestCase
      *
      * @return void
      */
-    public function testResetCorrectEmail() {
+    public function testResetCorrectEmail()
+    {
         $this->configRequest([
             'headers' => ['Accept' => 'application/json']
         ]);
@@ -86,7 +88,8 @@ class UsersControllerTest extends IntegrationTestCase
         $this->assertEquals(301, $record->expiration);
     }
 
-    public function testPasswordRecovery() {
+    public function testPasswordRecovery()
+    {
         $this->configRequest([
             'headers' => ['Accept' => 'application/json']
         ]);
@@ -130,16 +133,17 @@ class UsersControllerTest extends IntegrationTestCase
         $this->assertEquals(0, $result->first()->active);
     }
 
-    public function controllerSpy($event, $controller = null){
+    public function controllerSpy($event, $controller = null)
+    {
         parent::controllerSpy($event, $controller);
 
-        $emailer = $this->createMock('Cake\Mailer\Email');
-        $emailer->method('send')->willReturn('true');
-        $emailer->method('template')->willReturn($emailer);
-        $emailer->method('to')->willReturn($emailer);
-        $emailer->method('from')->willReturn($emailer);
-        $emailer->method('viewVars')->willReturn($emailer);
+        $email = $this->createMock('Cake\Mailer\Email');
+        $email->method('send')->willReturn('true');
+        $email->method('template')->willReturn($email);
+        $email->method('to')->willReturn($email);
+        $email->method('from')->willReturn($email);
+        $email->method('viewVars')->willReturn($email);
 
-        $this->_controller->emailer = $emailer;
+        $this->_controller->emailer = $email;
     }
 }

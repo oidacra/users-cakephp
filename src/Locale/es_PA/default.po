@@ -1,0 +1,414 @@
+# LANGUAGE translation of CakePHP Application
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2018-04-10 16:46-0500\n"
+"PO-Revision-Date: 2018-04-10 16:59-0500\n"
+"Last-Translator: \n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"Language: es_PA\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 2.0.1\n"
+
+#: Controller/PermissionsController.php:50 Controller/UsersController.php:102
+msgid "User not authenticated."
+msgstr "Usuario no autenticado."
+
+#: Controller/PermissionsController.php:82;107
+msgid "The permission has been saved."
+msgstr "El permiso fue salvado."
+
+#: Controller/PermissionsController.php:85;110
+msgid "The permission could not be saved. Please, try again."
+msgstr ""
+
+#: Controller/PermissionsController.php:129
+msgid "The permission has been deleted."
+msgstr ""
+
+#: Controller/PermissionsController.php:131
+msgid "The permission could not be deleted. Please, try again."
+msgstr ""
+
+#: Controller/RolesController.php:55;80
+msgid "The role has been saved."
+msgstr ""
+
+#: Controller/RolesController.php:58;83
+msgid "The role could not be saved. Please, try again."
+msgstr ""
+
+#: Controller/RolesController.php:102
+msgid "The role has been deleted."
+msgstr ""
+
+#: Controller/RolesController.php:104
+msgid "The role could not be deleted. Please, try again."
+msgstr ""
+
+#: Controller/UsersController.php:76
+msgid "User login"
+msgstr ""
+
+#: Controller/UsersController.php:82
+msgid "Username or password is incorrect"
+msgstr ""
+
+#: Controller/UsersController.php:85
+msgid "Invalid user."
+msgstr "Usuario inválido."
+
+#: Controller/UsersController.php:111
+msgid "Wrong token."
+msgstr "Token erróneo."
+
+#: Controller/UsersController.php:120
+msgid "Wrong token or it has already expired."
+msgstr "Token incorrecto o está expirado."
+
+#: Controller/UsersController.php:125
+msgid "Password was not provided."
+msgstr "No se ha introducido la contraseña."
+
+#: Controller/UsersController.php:133;375
+msgid "The password has been updated."
+msgstr "Tu contraseña ha sido actualizada."
+
+#: Controller/UsersController.php:139;381
+msgid "The password could not be updated. Please, try again."
+msgstr "No se pudo actualizar la contraseña, inténtalo de nuevo."
+
+#: Controller/UsersController.php:159
+msgid ""
+"Message has been sent to your email with\n"
+"                                    steps to recover your password"
+msgstr ""
+"Un email ha sido enviado a su cuenta de email con los pasos para recuperar "
+"tu contraseña."
+
+#: Controller/UsersController.php:171
+msgid ""
+"There was an error while sending the\n"
+"                                    email. Please try again or contact an\n"
+"                                    administrator."
+msgstr ""
+"Se produjo un error al enviar el correo electrónico con un enlace de "
+"verificación. Por favor, vuelva a intentar o póngase en contacto con "
+"nosotros."
+
+#: Controller/UsersController.php:182;191
+msgid "Incorrect email."
+msgstr "Correo electrónico incorrecto."
+
+#: Controller/UsersController.php:195
+msgid "Please provide an email."
+msgstr "Introduzca una dirección de correo electrónico."
+
+#: Controller/UsersController.php:229
+msgid "An email could not be sent to the address {0}. Error: {1}"
+msgstr ""
+
+#: Controller/UsersController.php:282;343
+msgid "The user has been saved."
+msgstr ""
+
+#: Controller/UsersController.php:288;349
+msgid "The user could not be saved. Please, try again."
+msgstr ""
+
+#: Controller/UsersController.php:310
+msgid ""
+"The user has been registered. An email has been sent to your account or wait "
+"for an\n"
+"                        administrator to make your account active."
+msgstr ""
+
+#: Controller/UsersController.php:317
+msgid "The new user could not be registered. Please, try again."
+msgstr ""
+
+#: Controller/UsersController.php:413
+msgid "The user has been deleted."
+msgstr ""
+
+#: Controller/UsersController.php:416
+msgid "The user could not be deleted. Please, try again."
+msgstr ""
+
+#: Controller/UsersController.php:442
+msgid "The user has been updated."
+msgstr ""
+
+#: Controller/UsersController.php:445
+msgid "The user could not be updated. Please, try again."
+msgstr ""
+
+#: Controller/UsersController.php:452
+msgid "Wrong user."
+msgstr ""
+
+#: Controller/Component/AccionaACLComponent.php:66
+msgid ""
+"Permission for domain: {0}, entity: {1}, action: {2}\n"
+"                          does not exists"
+msgstr ""
+
+#: Controller/Component/AccionaAuthComponent.php:92
+msgid "You do not have permissions to see this page"
+msgstr ""
+
+#: Model/Table/PermissionsTable.php:126
+msgid ""
+"Action {1} for permission {2}\n"
+"                                        does not exist"
+msgstr ""
+
+#: Template/Permissions/add.ctp:3 Template/Permissions/edit.ctp:3
+#: Template/Permissions/index.ctp:3;18 Template/Permissions/view.ctp:3;34;58
+#: Template/Roles/add.ctp:3 Template/Roles/edit.ctp:3
+#: Template/Roles/index.ctp:3;18 Template/Roles/view.ctp:3;33;63
+#: Template/Users/add.ctp:3 Template/Users/edit.ctp:3
+#: Template/Users/edit_password.ctp:3 Template/Users/index.ctp:3;18
+#: Template/Users/view.ctp:3
+msgid "Actions"
+msgstr ""
+
+#: Template/Permissions/add.ctp:4 Template/Permissions/edit.ctp:10
+#: Template/Permissions/view.ctp:6 Template/Roles/add.ctp:5
+#: Template/Roles/edit.ctp:11 Template/Roles/index.ctp:5
+#: Template/Roles/view.ctp:8
+msgid "List Permissions"
+msgstr ""
+
+#: Template/Permissions/add.ctp:5 Template/Permissions/edit.ctp:11
+#: Template/Permissions/index.ctp:5 Template/Permissions/view.ctp:8
+msgid "List Permissions Actions"
+msgstr ""
+
+#: Template/Permissions/add.ctp:6 Template/Permissions/edit.ctp:12
+#: Template/Permissions/index.ctp:6 Template/Permissions/view.ctp:9
+msgid "New Permissions Action"
+msgstr ""
+
+#: Template/Permissions/add.ctp:7 Template/Permissions/edit.ctp:13
+#: Template/Permissions/index.ctp:7 Template/Permissions/view.ctp:10
+#: Template/Roles/add.ctp:4 Template/Roles/edit.ctp:10
+#: Template/Roles/view.ctp:6
+msgid "List Roles"
+msgstr ""
+
+#: Template/Permissions/add.ctp:8 Template/Permissions/edit.ctp:14
+#: Template/Permissions/index.ctp:8 Template/Permissions/view.ctp:11
+#: Template/Roles/index.ctp:4 Template/Roles/view.ctp:7
+msgid "New Role"
+msgstr ""
+
+#: Template/Permissions/add.ctp:14
+msgid "Add Permission"
+msgstr ""
+
+#: Template/Permissions/add.ctp:19 Template/Permissions/edit.ctp:25
+#: Template/Roles/add.ctp:19 Template/Roles/edit.ctp:25
+#: Template/Users/add.ctp:20 Template/Users/edit.ctp:23
+#: Template/Users/edit_password.ctp:22 Template/Users/register.ctp:13
+#: Template/Users/reset.ctp:9
+msgid "Submit"
+msgstr ""
+
+#: Template/Permissions/edit.ctp:5 Template/Permissions/index.ctp:29
+#: Template/Permissions/view.ctp:44;67 Template/Roles/edit.ctp:5
+#: Template/Roles/index.ctp:29 Template/Roles/view.ctp:42;79
+#: Template/Users/edit.ctp:5 Template/Users/edit_password.ctp:5
+#: Template/Users/index.ctp:33
+msgid "Delete"
+msgstr ""
+
+#: Template/Permissions/edit.ctp:7 Template/Permissions/index.ctp:29
+#: Template/Permissions/view.ctp:5;44;67 Template/Roles/edit.ctp:7
+#: Template/Roles/index.ctp:29 Template/Roles/view.ctp:5;42;79
+#: Template/Users/edit.ctp:7 Template/Users/edit_password.ctp:7
+#: Template/Users/index.ctp:33 Template/Users/view.ctp:5
+msgid "Are you sure you want to delete # {0}?"
+msgstr ""
+
+#: Template/Permissions/edit.ctp:20 Template/Permissions/view.ctp:4
+msgid "Edit Permission"
+msgstr ""
+
+#: Template/Permissions/index.ctp:4 Template/Permissions/view.ctp:7
+#: Template/Roles/add.ctp:6 Template/Roles/edit.ctp:12
+#: Template/Roles/index.ctp:6 Template/Roles/view.ctp:9
+msgid "New Permission"
+msgstr ""
+
+#: Template/Permissions/index.ctp:12
+msgid "Permissions"
+msgstr ""
+
+#: Template/Permissions/index.ctp:27 Template/Permissions/view.ctp:42;65
+#: Template/Roles/index.ctp:27 Template/Roles/view.ctp:40;77
+#: Template/Users/index.ctp:30
+msgid "View"
+msgstr ""
+
+#: Template/Permissions/index.ctp:28 Template/Permissions/view.ctp:43;66
+#: Template/Roles/index.ctp:28 Template/Roles/view.ctp:41;78
+#: Template/Users/index.ctp:31
+msgid "Edit"
+msgstr ""
+
+#: Template/Permissions/index.ctp:37 Template/Roles/index.ctp:37
+#: Template/Users/index.ctp:41
+msgid "previous"
+msgstr ""
+
+#: Template/Permissions/index.ctp:39 Template/Roles/index.ctp:39
+#: Template/Users/index.ctp:43
+msgid "next"
+msgstr ""
+
+#: Template/Permissions/view.ctp:5
+msgid "Delete Permission"
+msgstr ""
+
+#: Template/Permissions/view.ctp:18 Template/Roles/view.ctp:32
+msgid "Entity"
+msgstr ""
+
+#: Template/Permissions/view.ctp:22;31;56 Template/Roles/view.ctp:22;31;54
+#: Template/Users/view.ctp:18
+msgid "Id"
+msgstr ""
+
+#: Template/Permissions/view.ctp:27
+msgid "Related Permissions Actions"
+msgstr ""
+
+#: Template/Permissions/view.ctp:32
+msgid "Action"
+msgstr ""
+
+#: Template/Permissions/view.ctp:33
+msgid "Permission Id"
+msgstr ""
+
+#: Template/Permissions/view.ctp:52
+msgid "Related Roles"
+msgstr ""
+
+#: Template/Permissions/view.ctp:57 Template/Roles/view.ctp:18;56
+msgid "Name"
+msgstr ""
+
+#: Template/Roles/add.ctp:7 Template/Roles/edit.ctp:13
+#: Template/Roles/index.ctp:7 Template/Roles/view.ctp:10
+#: Template/Users/add.ctp:4 Template/Users/edit.ctp:10
+#: Template/Users/edit_password.ctp:10 Template/Users/view.ctp:6
+msgid "List Users"
+msgstr ""
+
+#: Template/Roles/add.ctp:8 Template/Roles/edit.ctp:14
+#: Template/Roles/index.ctp:8 Template/Roles/view.ctp:11
+#: Template/Users/index.ctp:4 Template/Users/view.ctp:7
+msgid "New User"
+msgstr ""
+
+#: Template/Roles/add.ctp:14
+msgid "Add Role"
+msgstr ""
+
+#: Template/Roles/edit.ctp:20 Template/Roles/view.ctp:4
+msgid "Edit Role"
+msgstr ""
+
+#: Template/Roles/index.ctp:12
+msgid "Roles"
+msgstr ""
+
+#: Template/Roles/view.ctp:5
+msgid "Delete Role"
+msgstr ""
+
+#: Template/Roles/view.ctp:27
+msgid "Related Permissions"
+msgstr ""
+
+#: Template/Roles/view.ctp:50
+msgid "Related Users"
+msgstr ""
+
+#: Template/Roles/view.ctp:55 Template/Users/view.ctp:14
+msgid "Email"
+msgstr ""
+
+#: Template/Roles/view.ctp:57
+msgid "Last Name"
+msgstr ""
+
+#: Template/Roles/view.ctp:58
+msgid "Active"
+msgstr ""
+
+#: Template/Roles/view.ctp:59
+msgid "Administrator"
+msgstr ""
+
+#: Template/Roles/view.ctp:60 Template/Users/view.ctp:22
+msgid "Created"
+msgstr ""
+
+#: Template/Roles/view.ctp:61 Template/Users/view.ctp:26
+msgid "Modified"
+msgstr ""
+
+#: Template/Roles/view.ctp:62 Template/Users/index.ctp:32
+msgid "Password"
+msgstr ""
+
+#: Template/Users/add.ctp:11
+msgid "Add User"
+msgstr ""
+
+#: Template/Users/edit.ctp:16 Template/Users/view.ctp:4
+msgid "Edit User"
+msgstr ""
+
+#: Template/Users/edit_password.ctp:16
+msgid "Edit Password"
+msgstr ""
+
+#: Template/Users/index.ctp:9
+msgid "Users"
+msgstr ""
+
+#: Template/Users/login.ctp:5;11
+msgid "Login"
+msgstr ""
+
+#: Template/Users/register.ctp:4
+msgid "Register User"
+msgstr ""
+
+#: Template/Users/reset.ctp:4
+msgid "Reset Password"
+msgstr ""
+
+#: Template/Users/view.ctp:5
+msgid "Delete User"
+msgstr ""
+
+#: Model/Table/UsersTable.php:86
+msgid ""
+"Password should have at least an upper case letter,\n"
+"                                     lower case letter, a number and a "
+"symbol."
+msgstr ""
+
+#: Model/Table/UsersTable.php:99
+msgid "Passwords do not match"
+msgstr ""

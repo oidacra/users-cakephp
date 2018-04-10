@@ -114,7 +114,8 @@ class UsersController extends AppController
         $tokenRecord = $this->Users->PasswordTokens->find()
             ->where(['token' => $token])
             ->first();
-        if (!$tokenRecord || $tokenRecord->expiration > time() || $tokenRecord->active == 0) {
+      
+        if (!$tokenRecord || $tokenRecord->expiration < time() || $tokenRecord->active == 0) {
             throw new BadRequestException(__('Wrong token or it has already expired.'));
         }
 

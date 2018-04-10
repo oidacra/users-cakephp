@@ -214,7 +214,9 @@ class UsersController extends AppController
             $Emailer = $this->getEmailer();
             $Emailer->template($template, $layout)
                 ->to($email)
+                ->subject('Recobrar contraseña')
                 ->from($sender)
+                ->emailFormat('both')
                 ->viewVars(['link' => $link])
                 ->send();
         } catch (BadMethodCallException $b) {

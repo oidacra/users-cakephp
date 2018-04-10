@@ -45,7 +45,9 @@ class UsersController extends AppController
                     'sub' => $user['email'],
                     'exp' =>  time() +
                               Configure::read('Users.Token.expiration', 604800)
-                ], Security::salt())
+                ], Security::salt()),
+                'id' => $user['id'],
+                'administrator' => $user['administrator']
             ],
             '_serialize' => ['success', 'data']
         ];

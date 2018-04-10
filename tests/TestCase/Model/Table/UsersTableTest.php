@@ -3,6 +3,7 @@ namespace Acciona\Users\Test\TestCase\Model\Table;
 
 use Acciona\Users\Model\Table\UsersTable;
 use Acciona\Users\Model\Entity\User;
+use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use Cake\Event\EventListenerInterface;
@@ -116,32 +117,68 @@ class UsersTableTest extends TestCase
      */
     public function testValidationPassword()
     {
+        // correct
+        $pass = '123456%Abcd';
+        $user = $this->getUser('user15@acciona.net', $pass, $pass);
+
+        $result = $this->Users->save($user);
+        $this->assertNotFalse($result);
+
         // lacks a upper case
         $pass = '123456%abcd';
-        $user = $this->getUser($password = $pass, $retypePassword = $pass);
+        $user = $this->getUser('user2@acciona.net', $pass, $pass);
 
         $result = $this->Users->save($user);
         $this->assertFalse($result);
 
         // lacks a symbol
-        $password = '123456Aabcd';
-        $user = $this->getUser($password = $password, $retypePassword = $password);
+        $pass = '123456Aabcd';
+        $user = $this->getUser('user2@acciona.net', $pass, $pass);
 
         $result = $this->Users->save($user);
         $this->assertFalse($result);
 
         // too short
-        $password = '1%Aac';
-        $user = $this->getUser($password = $password, $retypePassword = $password);
+        $pass = '1%Aac';
+        $user = $this->getUser('user2@acciona.net', $pass, $pass);
 
         $result = $this->Users->save($user);
         $this->assertFalse($result);
 
         // different passwords
         // too short
-        $password = '221%Aac';
-        $retypePassword = '221%acC';
-        $user = $this->getUser($password = $password, $retypePassword = $retypePassword );
+        $pass = '221%Aac';
+        $retypePass = '221%acC';
+        $user = $this->getUser('user2@acciona.net', $pass, $retypePass);
+
+        $result = $this->Users->save($user);
+        $this->assertFalse($result);
+    }
+
+    /**
+     * Test validationDefault method
+     *
+     * @return void
+     */
+    public function testValidationCustomPassword()
+    {
+        // define custom password validator
+        $customPasswordValidator = function ($password, $context) {
+            $len = strlen($password);
+            return $len > 3 && $len < 10;
+        };
+        Configure::write('Users.passwordValidator', $customPasswordValidator);
+
+        // correct for custom password
+        $pass = '123456';
+        $user = $this->getUser('user15@acciona.net', $pass, $pass);
+
+        $result = $this->Users->save($user);
+        $this->assertNotFalse($result);
+
+        // incorrect
+        $pass = '1234567891011';
+        $user = $this->getUser('user16@acciona.net', $pass, $pass);
 
         $result = $this->Users->save($user);
         $this->assertFalse($result);
@@ -160,6 +197,7 @@ class UsersTableTest extends TestCase
             'name' => 'User 2',
             'last_name' => 'Users',
         ];
+
         $user = $this->Users->newEntity();
         $user = $this->Users->patchEntity($user, $data);
 

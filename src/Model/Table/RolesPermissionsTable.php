@@ -31,7 +31,7 @@ class RolesPermissionsTable extends Table
         $this->primaryKey('id');
 
         $this->belongsTo('Roles', [
-            'foreignKey' => 'rol_id',
+            'foreignKey' => 'role_id',
             'joinType' => 'INNER',
             'className' => 'Acciona/Users.Roles'
         ]);
@@ -70,7 +70,7 @@ class RolesPermissionsTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->existsIn(['rol_id'], 'Roles'));
+        $rules->add($rules->existsIn(['role_id'], 'Roles'));
         $rules->add($rules->existsIn(['permission_id'], 'Permissions'));
         return $rules;
     }

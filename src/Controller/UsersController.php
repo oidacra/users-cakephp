@@ -115,7 +115,9 @@ class UsersController extends AppController
         $tokenRecord = $this->Users->PasswordTokens->find()
             ->where(['token' => $token])
             ->first();
-        if (!$tokenRecord || $tokenRecord->expiration > time() || $tokenRecord->active == 0) {
+
+        // si no existe, o ya vencio o esta inactivo
+        if (!$tokenRecord || $tokenRecord->expiration < time() || $tokenRecord->active == 0) {
             throw new BadRequestException(__('Wrong token or it has already expired.'));
         }
 
@@ -153,6 +155,7 @@ class UsersController extends AppController
             $user = $this->Users->findByEmail($email)->first();
             if ($user) {
                 $token = $this->generateAndSaveToken($user->id);
+
                 if ($token && $this->sendRecoveryEmail($token, $user->email)) {
                     $message = __('Message has been sent to your email with
                                     steps to recover your password');
@@ -217,7 +220,9 @@ class UsersController extends AppController
             $Emailer = $this->getEmailer();
             $Emailer->template($template, $layout)
                 ->to($email)
+                ->subject('Recobrar contraseña')
                 ->from($sender)
+                ->emailFormat('both')
                 ->viewVars(['link' => $link])
                 ->send();
         } catch (BadMethodCallException $b) {

@@ -12,7 +12,7 @@ $config = [
         'Token' => ['expiration' => 18000],
         //Password recovery configuration
         'PasswordRecovery' => [
-            'sender' => 'danilo@accionasolutions.net',
+            'sender' => 'no-reply@accionasolutions.net',
             'template' => 'password_recovery',
             'layout' => 'default',
             'link' => '',

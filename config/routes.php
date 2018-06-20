@@ -36,7 +36,6 @@ Router::plugin(
                 ],
               ]
             ]);
-<<<<<<< HEAD
             $routes->resources('Roles',
                 [
                     'map' => [
@@ -46,16 +45,7 @@ Router::plugin(
                         ],
                     ]
                 ]);
-=======
-            $routes->resources('Roles',[
-                'map' => [
-                    'lista' => [
-                        'action' => 'lista',
-                        'method' => 'GET'
-                    ],
-                ]
-            ]);
->>>>>>> 9ef6e965a79c05e8fa25d12f1cea092d9f303e0c
+
             $routes->resources('Permissions',
                 [
                   'map' => [

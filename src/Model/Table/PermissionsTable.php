@@ -35,7 +35,7 @@ class PermissionsTable extends Table
         ]);
         $this->belongsToMany('Roles', [
             'foreignKey' => 'permission_id',
-            'targetForeignKey' => 'rol_id',
+            'targetForeignKey' => 'role_id',
             'joinTable' => 'roles_permissions',
             'className' => 'Acciona/Users.Roles',
             'through' => 'Acciona/Users.RolesPermissions'

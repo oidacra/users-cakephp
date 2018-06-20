@@ -61,7 +61,10 @@ class UsersController extends AppController
     public function index()
     {
         $this->request->allowMethod(['get']);
-        $users = $this->paginate($this->Users->find()->contain(['Roles']));
+
+
+        $users = $this->paginate($this->Users->find()->contain('Roles'));
+
 
         $this->set(compact('users'));
         $this->set('_serialize', ['users']);
@@ -280,7 +283,7 @@ class UsersController extends AppController
             $user = $this->Users->patchEntity($user, $this->request->data);
             if ($this->Users->save($user)) {
                 $this->Flash->success(__('The user has been saved.'));
-                $user = ['success' => true];
+                $user = ['success' => true, 'id'=>$user->id];
                 if (!$this->isRestCall()) {
                     return $this->redirect(['action' => 'index']);
                 }

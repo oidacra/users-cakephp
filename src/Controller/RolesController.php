@@ -53,13 +53,22 @@ class RolesController extends AppController
             $role = $this->Roles->patchEntity($role, $this->request->data);
             if ($this->Roles->save($role)) {
                 $this->Flash->success(__('The role has been saved.'));
-                return $this->redirect(['action' => 'index']);
+                $role = ['success' => true];
+                if (!$this->isRestCall()) {
+                    return $this->redirect(['action' => 'index']);
+                }
             } else {
+                $role = [
+                    'success' => false,
+                    'errors' => $role->errors()
+                ];
                 $this->Flash->error(__('The role could not be saved. Please, try again.'));
             }
         }
-        $this->set(compact('role'));
-        $this->set('_serialize', ['role']);
+
+
+        $this->setData($role);
+
     }
 
     /**
@@ -96,14 +105,54 @@ class RolesController extends AppController
      */
     public function delete($id = null)
     {
+
         $this->request->allowMethod(['post', 'delete']);
         $role = $this->Roles->get($id);
         if ($this->Roles->delete($role)) {
-            $this->Flash->success(__('The role has been deleted.'));
+            $this->Flash->success(__('The rol has been deleted.'));
+            $role = ['success' => true];
         } else {
-            $this->Flash->error(__('The role could not be deleted. Please, try again.'));
+            $this->Flash->error(__('The rol could not be deleted. Please, try again.'));
+            $role = [
+                'success' => false,
+                'errors' => $role->errors()
+            ];
         }
-        return $this->redirect(['action' => 'index']);
+
+        if ($this->isRestCall()) {
+            $this->setData($role);
+        } else {
+            return $this->redirect(['action' => 'index']);
+        }
+
+    }
+
+    private function setData($roles) {
+        if (!$this->isRestCall()) {
+            $this->set(compact('roles'));
+        } else {
+            $this->set('roles',$roles);
+        }
+        $this->set('_serialize', ['roles']);
+    }
+    /**
+     * lista method
+     * Listado de roles
+     *
+     * @return json
+     */
+    public function lista(){
+
+        if ($this->request->is('get')) {
+            $this->set([
+                'success' => true,
+                'data' => $this->Roles->find('all')->select(['value'=>'id', 'label'=>'name']),
+                '_serialize' => ['success', 'data']
+            ]);
+        }else{
+            throw new BadRequestException('Error listando');
+        }
+
     }
 
     public function lista(){

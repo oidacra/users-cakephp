@@ -105,4 +105,18 @@ class RolesController extends AppController
         }
         return $this->redirect(['action' => 'index']);
     }
+
+    public function lista(){
+
+        if ($this->request->is('get')) {
+            $this->set([
+                'success' => true,
+                'data' => $this->Roles->find('all')->select(['value'=>'id', 'label'=>'name']),
+                '_serialize' => ['success', 'data']
+            ]);
+        }else{
+            throw new BadRequestException('Error listando');
+        }
+
+    }
 }

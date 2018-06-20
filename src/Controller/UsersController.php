@@ -61,7 +61,7 @@ class UsersController extends AppController
     public function index()
     {
         $this->request->allowMethod(['get']);
-        $users = $this->paginate($this->Users);
+        $users = $this->paginate($this->Users->find()->contain(['Roles']));
 
         $this->set(compact('users'));
         $this->set('_serialize', ['users']);
@@ -261,7 +261,7 @@ class UsersController extends AppController
     public function view($id = null)
     {
         $user = $this->Users->get($id, [
-            'contain' => []
+            'contain' => ['Roles']
         ]);
 
         $this->set('user', $user);

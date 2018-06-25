@@ -62,8 +62,11 @@ class UsersController extends AppController
     {
         $this->request->allowMethod(['get']);
 
-
-        $users = $this->paginate($this->Users->find()->contain('Roles'));
+        if ($this->isRestCall()) {
+            $users = $this->Users->find()->contain('Roles');
+        }else{
+            $users = $this->paginate($this->Users->find()->contain('Roles'));
+        }
 
 
         $this->set(compact('users'));

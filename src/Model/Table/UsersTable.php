@@ -38,6 +38,10 @@ class UsersTable extends Table
             'foreignKey' => 'user_id',
             'className' => 'Acciona/Users.PasswordTokens'
         ]);
+        $this->hasMany('UsersLogs', [
+            'foreignKey' => 'user_id',
+            'className' => 'Acciona/Users.UsersLogs'
+        ]);
 
         $this->belongsToMany('Roles', [
             'foreignKey' => 'user_id',

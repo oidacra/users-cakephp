@@ -17,6 +17,7 @@ use Firebase\JWT\JWT;
  *
  * @property \Acciona\Users\Model\Table\UsersTable $Users
  * @property \Acciona\Users\Model\Table\PasswordTokens $PasswordTokens
+ * @property \Acciona\Users\Model\Table\UsersLogs $UsersLogs
  * @author Danilo Dominguez Perez
  */
 class UsersController extends AppController
@@ -33,6 +34,10 @@ class UsersController extends AppController
 
         $config = TableRegistry::exists('PasswordTokens') ? [] : ['className' => 'Acciona\Users\Model\Table\PasswordTokensTable'];
         $this->PasswordTokens = TableRegistry::get('PasswordTokens', $config);
+
+        $config = TableRegistry::exists('UsersLogs') ? [] : ['className' => 'Acciona\Users\Model\Table\UsersLogsTable'];
+        $this->UsersLogs = TableRegistry::get('UsersLogs', $config);
+
         $this->emailer = new Email();
     }
 
@@ -84,6 +89,8 @@ class UsersController extends AppController
                 if (!$this->isRestCall()) {
                     return $this->redirect($this->Auth->redirectUrl());
                 }
+                //Log Access
+                $this->UsersLogs->logAccess($user);
             } else {
                 $errorMessage = __('Username or password is incorrect');
                 $this->Flash->error($errorMessage);

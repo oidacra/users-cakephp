@@ -38,6 +38,10 @@ class UsersTable extends Table
             'foreignKey' => 'user_id',
             'className' => 'Acciona/Users.PasswordTokens'
         ]);
+        $this->hasMany('UsersLogs', [
+            'foreignKey' => 'user_id',
+            'className' => 'Acciona/Users.UsersLogs'
+        ]);
 
         $this->belongsToMany('Roles', [
             'foreignKey' => 'user_id',
@@ -74,11 +78,15 @@ class UsersTable extends Table
             ->notEmpty('last_name')
             ->maxLength('last_name', 70);
 
+        // the password validator can be configured by the application
+        $passwordValidator = Configure::check('Users.passwordValidator') ?
+            Configure::read('Users.passwordValidator') : [$this, 'isStrongPassword'];
+
         $validator
             ->requirePresence('password', 'create')
             ->add('password',
                 'strong', [
-                    'rule' => [$this, 'isStrongPassword'],
+                    'rule' => $passwordValidator,
                     'message' => __d('Users', 'Password should have at least an upper case letter,
                                      lower case letter, a number and a symbol.')
                 ]

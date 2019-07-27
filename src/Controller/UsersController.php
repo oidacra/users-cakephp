@@ -17,6 +17,7 @@ use Firebase\JWT\JWT;
  *
  * @property \Acciona\Users\Model\Table\UsersTable $Users
  * @property \Acciona\Users\Model\Table\PasswordTokens $PasswordTokens
+ * @property \Acciona\Users\Model\Table\UsersLogs $UsersLogs
  * @author Danilo Dominguez Perez
  */
 class UsersController extends AppController
@@ -33,6 +34,10 @@ class UsersController extends AppController
 
         $config = TableRegistry::exists('PasswordTokens') ? [] : ['className' => 'Acciona\Users\Model\Table\PasswordTokensTable'];
         $this->PasswordTokens = TableRegistry::get('PasswordTokens', $config);
+
+        $config = TableRegistry::exists('UsersLogs') ? [] : ['className' => 'Acciona\Users\Model\Table\UsersLogsTable'];
+        $this->UsersLogs = TableRegistry::get('UsersLogs', $config);
+
         $this->emailer = new Email();
     }
 
@@ -45,7 +50,9 @@ class UsersController extends AppController
                     'sub' => $user['email'],
                     'exp' =>  time() +
                               Configure::read('Users.Token.expiration', 604800)
-                ], Security::salt())
+                ], Security::salt()),
+                'id' => $user['id'],
+                'administrator' => $user['administrator']
             ],
             '_serialize' => ['success', 'data']
         ];
@@ -59,7 +66,13 @@ class UsersController extends AppController
     public function index()
     {
         $this->request->allowMethod(['get']);
-        $users = $this->paginate($this->Users);
+
+        if ($this->isRestCall()) {
+            $users = $this->Users->find()->contain('Roles');
+        }else{
+            $users = $this->paginate($this->Users->find()->contain('Roles'));
+        }
+
 
         $this->set(compact('users'));
         $this->set('_serialize', ['users']);
@@ -76,6 +89,8 @@ class UsersController extends AppController
                 if (!$this->isRestCall()) {
                     return $this->redirect($this->Auth->redirectUrl());
                 }
+                //Log Access
+                $this->UsersLogs->logAccess($user);
             } else {
                 $errorMessage = __('Username or password is incorrect');
                 $this->Flash->error($errorMessage);
@@ -112,7 +127,9 @@ class UsersController extends AppController
         $tokenRecord = $this->Users->PasswordTokens->find()
             ->where(['token' => $token])
             ->first();
-        if (!$tokenRecord || $tokenRecord->expiration > time() || $tokenRecord->active == 0) {
+
+        // si no existe, o ya vencio o esta inactivo
+        if (!$tokenRecord || $tokenRecord->expiration < time() || $tokenRecord->active == 0) {
             throw new BadRequestException(__('Wrong token or it has already expired.'));
         }
 
@@ -150,6 +167,7 @@ class UsersController extends AppController
             $user = $this->Users->findByEmail($email)->first();
             if ($user) {
                 $token = $this->generateAndSaveToken($user->id);
+
                 if ($token && $this->sendRecoveryEmail($token, $user->email)) {
                     $message = __('Message has been sent to your email with
                                     steps to recover your password');
@@ -214,7 +232,9 @@ class UsersController extends AppController
             $Emailer = $this->getEmailer();
             $Emailer->template($template, $layout)
                 ->to($email)
+                ->subject('Recobrar contraseña')
                 ->from($sender)
+                ->emailFormat('both')
                 ->viewVars(['link' => $link])
                 ->send();
         } catch (BadMethodCallException $b) {
@@ -254,7 +274,7 @@ class UsersController extends AppController
     public function view($id = null)
     {
         $user = $this->Users->get($id, [
-            'contain' => []
+            'contain' => ['Roles']
         ]);
 
         $this->set('user', $user);
@@ -273,7 +293,7 @@ class UsersController extends AppController
             $user = $this->Users->patchEntity($user, $this->request->data);
             if ($this->Users->save($user)) {
                 $this->Flash->success(__('The user has been saved.'));
-                $user = ['success' => true];
+                $user = ['success' => true, 'id'=>$user->id];
                 if (!$this->isRestCall()) {
                     return $this->redirect(['action' => 'index']);
                 }

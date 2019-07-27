@@ -34,11 +34,10 @@ class AccionaACLComponentTest extends TestCase
         // Setup our component and fake test controller
         $request = new Request();
         $response = new Response();
-        $this->controller = $this->createMock(
-            'Cake\Controller\Controller',
-            null,
-            [$request, $response]
-        );
+        $this->controller = $this->getMockBuilder('Cake\Controller\Controller')
+            ->setConstructorArgs([$request, $response])
+            ->setMethods(null)
+            ->getMock();
         $registry = new ComponentRegistry($this->controller);
         $this->component = new AccionaACLComponent($registry, []);
         $this->request = $request;

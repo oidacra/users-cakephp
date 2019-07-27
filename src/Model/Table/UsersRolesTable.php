@@ -36,7 +36,7 @@ class UsersRolesTable extends Table
             'className' => 'Acciona/Users.Users'
         ]);
         $this->belongsTo('Roles', [
-            'foreignKey' => 'rol_id',
+            'foreignKey' => 'role_id',
             'joinType' => 'INNER',
             'className' => 'Acciona/Users.Roles'
         ]);

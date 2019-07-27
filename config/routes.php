@@ -36,14 +36,23 @@ Router::plugin(
                 ],
               ]
             ]);
-            $routes->resources('Roles');
+            $routes->resources('Roles',
+                [
+                    'map' => [
+                        'lista' => [
+                            'action' => 'lista',
+                            'method' => 'GET'
+                        ],
+                    ]
+                ]);
+
             $routes->resources('Permissions',
                 [
                   'map' => [
                     'permissions' => [
                       'action' => 'permissions',
                       'method' => 'GET'
-                    ],
+                    ]
                   ]
                 ]
             );

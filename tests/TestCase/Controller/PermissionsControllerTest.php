@@ -47,7 +47,7 @@ class PermissionsControllerTest extends IntegrationTestCase
         $this->configRequest([
             'headers' => [
                 'Accept' => 'application/json',
-                'authorization' => 'Bearer ' . $token
+                'authorization' => '`` ' . $token
             ]
         ]);
         $this->get('/permissions/permissions.json');

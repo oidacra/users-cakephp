@@ -42,12 +42,24 @@ class UsersControllerTest extends IntegrationTestCase
         $this->mock = $builder->build();
         $this->mock->enable();
 
+        $builderController = new MockBuilder();
+        $builderController->setNamespace('Acciona\Users\Controller')
+            ->setName("time")
+            ->setFunction(
+                function () {
+                    return 1;
+                }
+            );
+        $this->mockController = $builderController->build();
+        $this->mockController->enable();
+
         parent::setUp();
     }
 
     public function tearDown()
     {
         $this->mock->disable();
+        $this->mockController->disable();
         parent::tearDown();
     }
 
@@ -142,8 +154,13 @@ class UsersControllerTest extends IntegrationTestCase
         $email->method('template')->willReturn($email);
         $email->method('to')->willReturn($email);
         $email->method('from')->willReturn($email);
+        $email->method('subject')->willReturn($email);
+        $email->method('emailFormat')->willReturn($email);
         $email->method('viewVars')->willReturn($email);
 
-        $this->_controller->emailer = $email;
+        $EmailProvider = $this->createMock('Acciona\Users\Controller\EmailProvider');
+        $EmailProvider->method('getEmailer')->willReturn($email);
+
+        $this->_controller->EmailerProvider = $EmailProvider;
     }
 }

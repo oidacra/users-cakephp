@@ -18,6 +18,7 @@ class PermissionsControllerTest extends IntegrationTestCase
         'plugin.acciona/users.permissions',
         'plugin.acciona/users.permissions_actions',
         'plugin.acciona/users.roles',
+        'plugin.acciona/users.users_logs',
         'plugin.acciona/users.roles_permissions',
         'plugin.acciona/users.users',
         'plugin.acciona/users.users_roles'

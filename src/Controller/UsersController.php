@@ -37,8 +37,7 @@ class UsersController extends AppController
 
         $config = TableRegistry::exists('UsersLogs') ? [] : ['className' => 'Acciona\Users\Model\Table\UsersLogsTable'];
         $this->UsersLogs = TableRegistry::get('UsersLogs', $config);
-
-        $this->emailer = new Email();
+        $this->EmailerProvider = new EmailProvider();
     }
 
     protected function getToken($user)
@@ -223,14 +222,14 @@ class UsersController extends AppController
     protected function sendRecoveryEmail($token, $email)
     {
         try {
-            $template = Configure::read('Users.PasswordRecovery.template');
-            $layout = Configure::read('Users.PasswordRecovery.layout');
-            $sender = Configure::read('Users.PasswordRecovery.sender');
+            $template = Configure::read('Users.PasswordRecovery.template', 'password_recovery');
+            $layout = Configure::read('Users.PasswordRecovery.layout', 'default');
+            $sender = Configure::read('Users.PasswordRecovery.sender', 'no-reply@accionasolutions.net');
             $link = Configure::read('Users.PasswordRecovery.link') .
                     '?token=' . $token;
 
-            $Emailer = $this->getEmailer();
-            $Emailer->template($template, $layout)
+            $Emailer = $this->EmailerProvider->getEmailer();
+            $Emailer = $Emailer->template($template, $layout)
                 ->to($email)
                 ->subject('Recobrar contraseña')
                 ->from($sender)
@@ -307,10 +306,6 @@ class UsersController extends AppController
         }
 
         $this->setData($user);
-    }
-
-    public function getEmailer() {
-        return $this->emailer;
     }
 
     public function register()

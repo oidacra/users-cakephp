@@ -50,6 +50,10 @@ class UsersTable extends Table
             'className' => 'Acciona/Users.Roles'
         ]);
 
+        $this->hasOne('UsersProfiles')
+            ->setName('UsersProfiles')
+            ->setDependent(true);
+
         $this->minPasswordLen = Configure::read('Users.minPasswordLen', 6);
     }
 

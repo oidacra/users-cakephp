@@ -68,7 +68,7 @@ class UsersController extends AppController
         $this->request->allowMethod(['get']);
 
         if ($this->isRestCall()) {
-            $users = $this->Users->find()->contain('Roles');
+            $users = $this->Users->find()->contain(['Roles','UsersProfiles.Direcciones']);
         }else{
             $users = $this->paginate($this->Users->find()->contain('Roles'));
         }
@@ -352,6 +352,9 @@ class UsersController extends AppController
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $user = $this->Users->patchEntity($user, $this->request->data);
+            $this->Users->UsersProfiles->deleteAll(['user_id'=>$id]);
+            $this->Users->UsersRoles->deleteAll(['user_id'=>$id]);
+
             if ($this->Users->save($user)) {
                 $this->Flash->success(__('The user has been saved.'));
                 $user = ['success' => true];
